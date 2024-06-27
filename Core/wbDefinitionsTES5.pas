@@ -12813,7 +12813,7 @@ begin
     wbByteColors(PNAM, 'Marker Color (Unused)'),
     wbLString(RNAM, 'Activate Text Override', 0, cpTranslate),
     wbUnknown(FNAM),
-    wbFormIDCk(PFIG, 'Ingredient', [INGR, ALCH, LVLI, MISC, NULL]),
+    wbFormIDCk(PFIG, 'Ingredient', [ALCH, AMMO, APPA, ARMO, BOOK, INGR, KEYM, LIGH, LVLI, MISC, SCRL, SLGM, WEAP, NULL]),
     wbFormIDCK(SNAM, 'Sound', [SNDR, NULL]),
     wbSeasons
   ], False, nil, cpNormal, False, nil, wbKeywordsAfterSet);
