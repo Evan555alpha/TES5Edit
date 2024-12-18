@@ -365,7 +365,7 @@ type
     procedure AddReferencedFromID(aFormID: TwbFormID); virtual;
     function CompareExchangeFormID(aOldFormID: TwbFormID; aNewFormID: TwbFormID): Boolean; virtual;
     function GetIsEditable: Boolean; virtual;
-    function GetIsRemoveable: Boolean; virtual;
+    function GetIsRemovable: Boolean; virtual;
     function GetIsClearable: Boolean; virtual;
     function GetEditValue: string; virtual;
     procedure SetEditValue(const aValue: string); virtual;
@@ -632,7 +632,7 @@ type
     function GetAddList: TDynStrings; virtual;
     function Add(const aName: string; aSilent: Boolean): IwbElement; virtual;
 
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; virtual;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; virtual;
     function IsElementEditable(const aElement: IwbElement): Boolean; virtual;
 
     function IndexOf(const aElement: IwbElement): Integer; virtual;
@@ -778,10 +778,10 @@ type
     function GetAddList: TDynStrings; override;
     function Add(const aName: string; aSilent: Boolean): IwbElement; override;
 
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     function IsElementEditable(const aElement: IwbElement): Boolean; override;
     function GetIsEditable: Boolean; override;
-    function GetIsRemoveable: Boolean; override;
+    function GetIsRemovable: Boolean; override;
 
     procedure WriteToStream(aStream: TStream; aResetModified: TwbResetModified); override;
     procedure WriteToStreamInternal(aStream: TStream; aResetModified: TwbResetModified); override;
@@ -1257,7 +1257,7 @@ type
     procedure SetEditValue(const aValue: string); override;
     function GetNativeValue: Variant; override;
     procedure SetNativeValue(const aValue: Variant); override;
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     procedure SetContainer(const aContainer: IwbContainer); override;
 
     function FindReferencedBy(const aMainRecord: IwbMainRecord; var Index: Integer): Boolean;
@@ -1505,7 +1505,7 @@ type
     function GetName: string; override;
     function GetDisplayName(aUseSuffix: Boolean): string; override;
 
-    function GetDisplaySignature: string; virtual;   
+    function GetDisplaySignature: string; override;
 
     procedure ResetMemoryOrder(aFrom: Integer = 0; aTo: Integer = High(Integer)); override;
 
@@ -1531,7 +1531,7 @@ type
     procedure FindUsedMasters(aMasters: PwbUsedMasters); override;
     procedure MergeStorageInternal(var aBasePtr: Pointer; aEndPtr: Pointer); override;
     procedure InformStorage(var aBasePtr: Pointer; aEndPtr: Pointer); override;
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     procedure SetModified(aValue: Boolean); override;
     function CanContainFormIDs: Boolean; override;
     function CanElementReset: Boolean; override;
@@ -1644,7 +1644,7 @@ type
     procedure UpdateCountViaPath;
 
     function GetElementType: TwbElementType; override;
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     procedure SetModified(aValue: Boolean); override;
     procedure ElementChanged(const aElement: IwbElement; aContainer: Pointer); override;
 
@@ -1839,7 +1839,7 @@ type
     procedure InvalidateParentStorage; override;
 
     function GetIsEditable: Boolean; override;
-    function GetIsRemoveable: Boolean; override;
+    function GetIsRemovable: Boolean; override;
 
     procedure Remove; override;
 
@@ -1909,7 +1909,7 @@ type
     function GetShortName: string; override;
     function GetElementType: TwbElementType; override;
     function GetSortKeyInternal(aExtended: Boolean): string; override;
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     procedure Remove; override;
     procedure NotifyChangedInternal(aContainer: Pointer); override;
 
@@ -1991,7 +1991,7 @@ type
     function GetName: string; override;
     function GetDef: IwbNamedDef; override;
     function GetElementType: TwbElementType; override;
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     procedure SetModified(aValue: Boolean); override;
     function CanContainFormIDs: Boolean; override;
     function CanElementReset: Boolean; override;
@@ -2037,7 +2037,7 @@ type
     function GetName: string; override;
     function GetDef: IwbNamedDef; override;
     function GetElementType: TwbElementType; override;
-    function IsElementRemoveable(const aElement: IwbElement): Boolean; override;
+    function IsElementRemovable(const aElement: IwbElement): Boolean; override;
     function CanContainFormIDs: Boolean; override;
     function CanElementReset: Boolean; override;
     function RemoveInjected(aCanRemove: Boolean): Boolean; override;
@@ -2348,10 +2348,8 @@ const
   DFOB      : TwbSignature = 'DFOB';
 var
   FormID    : TwbFormID;
-  s         : string;
   i         : Integer;
   Master    : IwbMainRecord;
-  Signature : TwbSignature;
   GameMasterFile : IwbFileInternal;
 begin
   if not Assigned(aRecord) then
@@ -2981,8 +2979,8 @@ begin
              wbStarfieldIsABugInfestedHellhole and
              wbIsStarfield and
              (
-               SameText(flMasters[i].FileName, 'Starfield.esm') or
-               SameText(flMasters[i].FileName, 'BlueprintShips-Starfield.esm')
+                  SameText(flMasters[i].FileName, 'Starfield.esm')
+//             or SameText(flMasters[i].FileName, 'BlueprintShips-Starfield.esm')
              )
            )
         then begin
@@ -3240,7 +3238,7 @@ begin
   end;
 
   if wbStarfieldIsABugInfestedHellhole and wbIsStarfield then
-    AddMasters(['Starfield.esm', 'BlueprintShips-Starfield.esm']);
+    AddMasters(['Starfield.esm'{, 'BlueprintShips-Starfield.esm'}]);
 
   BuildOrLoadRef(False);
 end;
@@ -3341,7 +3339,7 @@ begin
             AddMaster(_File);
 
   if wbStarfieldIsABugInfestedHellhole and wbIsStarfield then
-    AddMasters(['Starfield.esm', 'BlueprintShips-Starfield.esm']);
+    AddMasters(['Starfield.esm'{, 'BlueprintShips-Starfield.esm'}]);
 
   BuildOrLoadRef(False);
 end;
@@ -4161,7 +4159,7 @@ end;
 function TwbFile.GetIsEditable: Boolean;
 begin
   if wbIsStarfield and Assigned(flModule) then
-   if flModule.miExtension = meESP then
+   if (flModule.miExtension = meESP) and not wbRedPill then
      Exit(False);
 
   Result :=
@@ -4351,7 +4349,7 @@ begin
   Result := not wbIsModule(flFileName);
 end;
 
-function TwbFile.GetIsRemoveable: Boolean;
+function TwbFile.GetIsRemovable: Boolean;
 begin
   Result := False;
 end;
@@ -4543,7 +4541,7 @@ var
   Header      : IwbMainRecord;
   MasterFiles : IwbContainerElementRef;
   Rec         : IwbRecord;
-  i           : Integer;
+  i, j        : Integer;
 begin
   if fsOnlyHeader in flStates then begin
     if (GetElementCount <> 1) or not Supports(GetElement(0), IwbMainRecord, Header) then
@@ -4559,7 +4557,7 @@ begin
         if not Assigned(Rec) then
           raise Exception.CreateFmt('Unexpected error reading master list for file "%s"', [flFileName]);
         if not wbStripEmptyMasters or (Trim(Rec.EditValue) <> '') then
-          if not wbStripMasters or (wbStripMasters and wbStripMastersFileNames.Find(Rec.EditValue, i) = False) then
+          if not wbStripMasters or (wbStripMasters and wbStripMastersFileNames.Find(Rec.EditValue, j) = False) then
             aMasters.Add(Rec.EditValue);
       end;
   end else
@@ -4803,7 +4801,7 @@ begin
   Result := wbIsInternalEdit or GetIsEditable;
 end;
 
-function TwbFile.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbFile.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
   Result := False;
 
@@ -4833,6 +4831,8 @@ begin
       Result := aFileID.MediumSlot >= GetMediumMasterCount(aNew);
     mtFull:
       Result := aFileID.FullSlot >= GetFullMasterCount(aNew);
+  else
+    Result := aFileID.FullSlot >= GetMasterCount(aNew);
   end else
     Result := aFileID.FullSlot >= GetMasterCount(aNew);
 end;
@@ -4963,7 +4963,8 @@ begin
   case lModuleType of
     mtLight: Mask := $FFF;
     mtMedium: Mask := $FFFF;
-    mtFull: Mask := $FFFFFF;
+  else
+    {mtFull: }Mask := $FFFFFF;
   end;
   
   NextObjectID := GetNextObjectID and Mask;
@@ -5065,8 +5066,11 @@ begin
           SetIsLight(True);
       end;
 
-      if flModule.miExtension = meESP then
+      if (flModule.miExtension = meESP) and not wbRedPill then
         raise Exception.Create('".esp" modules can not be saved in ' + wbAppName + wbToolName);
+
+      if wbRedPill then
+        FileHeader.ElementEditValues['CNAM'] := 'RedPill';
     end;
 
     inherited;
@@ -5418,10 +5422,6 @@ begin
 end;
 
 procedure TwbFile.RemoveMainRecord(const aRecord: IwbMainRecord);
-var
-  i      : Integer;
-  Master : IwbMainRecord;
-  FormID : TwbFormID;
 begin
   if not Assigned(aRecord) then
     Exit;
@@ -5437,12 +5437,14 @@ begin
 
       lFormID := aRecord.FixedFormID;
 
-      if (Length(flRecords) < 1) or not FindFormID(lFormID, i, True) then
+
+      var lFoundIdx: Integer;
+      if (Length(flRecords) < 1) or not FindFormID(lFormID, lFoundIdx, True) then
         raise Exception.Create('Can''t remove FormID [' + lFormID.ToString(True) + '] from file ' + GetName + ': FormID not registered');
 
-      flRecords[i] := nil;
-      if i < High(flRecords) then begin
-        Move(flRecords[Succ(i)], flRecords[i], SizeOf(Pointer) * (High(flRecords) - i));
+      flRecords[lFoundIdx] := nil;
+      if lFoundIdx < High(flRecords) then begin
+        Move(flRecords[Succ(lFoundIdx)], flRecords[lFoundIdx], SizeOf(Pointer) * (High(flRecords) - lFoundIdx));
         Pointer(flRecords[High(flRecords)]) := nil;
       end;
       SetLength(flRecords, Pred(Length(flRecords)));
@@ -5461,9 +5463,9 @@ begin
     if not lIsHardcoded and IsNewRecord(lFileID, True) then begin
       {record for this file}
     end else try
-      Master := GetMasterRecordByFormID(lFormID, True, True);
-      if Assigned(Master) and ((Master as IwbElement) <> (aRecord as IwbElement)) then
-        (Master as IwbMainRecordInternal).RemoveOverride(aRecord)
+      var lMaster := GetMasterRecordByFormID(lFormID, True, True);
+      if Assigned(lMaster) and ((lMaster as IwbElement) <> (aRecord as IwbElement)) then
+        (lMaster as IwbMainRecordInternal).RemoveOverride(aRecord)
       else
         (GetMasterForFileID(lFileID, True, False) as IwbFileInternal).RemoveInjectedMainRecord(aRecord);
     except
@@ -5598,7 +5600,7 @@ begin
         if not Assigned(Rec) then
           raise Exception.CreateFmt('Unexpected error reading master list for file "%s"', [flFileName]);
         if not wbStripEmptyMasters or (Trim(Rec.EditValue) <> '') then
-          if not wbStripMasters or (wbStripMasters and wbStripMastersFileNames.Find(Rec.EditValue, i) = False) then
+          if not wbStripMasters or (wbStripMasters and wbStripMastersFileNames.Find(Rec.EditValue, j) = False) then
             AddMaster(Rec.EditValue, False, flLoadOrder = High(Integer));
       end;
 
@@ -5735,10 +5737,10 @@ begin
           end else
             DialRecord := nil;
 
-          if (Signature = 'LAND') or (Signature = 'PGRD') or (Signature = 'FRMR') or (Signature = 'NAM0') then begin
+          if (Signature = 'LAND') or (Signature = 'PGRD') or (Signature = 'FRMR') or (Signature = 'NAM0') or (Signature = 'MVRF') or (Signature = 'CNDT') then begin
             if (Signature = 'LAND') or (Signature = 'PGRD') then
               GroupType := 9;
-            if Signature <> 'NAM0' then begin
+            if (Signature <> 'NAM0') and (Signature <> 'MVRF') then begin
               if Assigned(GroupRecord) then
                 if not Assigned(CellRecord) or (GroupRecord.GroupType <> GroupType) or not CellRecord.Equals(GroupRecord.ChildrenOf) then
                   GroupRecord := nil;
@@ -5756,7 +5758,7 @@ begin
           end else
             CellRecord := nil;
 
-          if Signature <> 'NAM0' then begin
+          if (Signature <> 'NAM0') and (Signature <> 'MVRF') then begin
             if not Assigned(Container) then begin
               if Assigned(GroupRecord) then
                 if (GroupRecord.GroupType <> 0) or (GroupRecord.GroupLabelSignature <> Signature) then
@@ -5802,7 +5804,7 @@ begin
                 GroupType := 8;
               end;
             end else
-              if Rec.Signature = 'NAM0' then
+              if (Rec.Signature = 'NAM0') or (Rec.Signature = 'MVRF') then
                 GroupType := 9;
           end else
             flProgress(Rec.Name + ' processed');
@@ -6405,7 +6407,7 @@ begin
     Result := True;
 end;
 
-function TwbContainer.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbContainer.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
   Result := False;
 end;
@@ -8027,7 +8029,7 @@ begin
         if Result and aCanRemove then
           Break;
       end;
-  if Result and aCanRemove and GetIsRemoveable then begin
+  if Result and aCanRemove and GetIsRemovable then begin
     Result := False;
     Remove;
   end;
@@ -8594,7 +8596,7 @@ begin
       if PwbSignature(aPtr)^ = 'GRUP' then
         Result := TwbGroupRecord.Create(aContainer, aPtr, aEndPtr, aPrevMainRecord)
       else begin
-        if (wbGameMode = gmTES3) and (PwbSignature(aPtr)^ = 'NAM0') then
+        if (wbGameMode = gmTES3) and ((PwbSignature(aPtr)^ = 'NAM0') or (PwbSignature(aPtr)^ = 'MVRF')) then
           Result := TwbSubRecord.Create(nil, aPtr, aEndPtr, nil)
         else
           Result := TwbMainRecord.Create(aContainer, aPtr, aEndPtr, aPrevMainRecord);
@@ -8683,7 +8685,6 @@ var
   SelfRef   : IwbContainerElementRef;
   i         : Integer;
   Group     : IwbGroupRecord;
-  GrpType   : Integer;
 begin
   Result := nil;
 
@@ -9426,17 +9427,17 @@ begin
       var lFileID := Result.FileID;
       case lFileID.ModuleType of
         mtLight:
-          if lFileID.LightSlot > lFile.LightMasterCount[GetMastersUpdated] then
+          if lFileID.LightSlot >= lFile.LightMasterCount[GetMastersUpdated] then
             Result.FileID := lFile.FileFileID[GetMastersUpdated];
         mtMedium:
-          if lFileID.MediumSlot > lFile.MediumMasterCount[GetMastersUpdated] then
+          if lFileID.MediumSlot >= lFile.MediumMasterCount[GetMastersUpdated] then
             Result.FileID := lFile.FileFileID[GetMastersUpdated];
         mtFull:
-          if lFileID.FullSlot > lFile.FullMasterCount[GetMastersUpdated] then
+          if lFileID.FullSlot >= lFile.FullMasterCount[GetMastersUpdated] then
             Result.FileID := lFile.FileFileID[GetMastersUpdated];
       end;
     end else
-      if Result.FileID.FullSlot > lFile.MasterCount[GetMastersUpdated] then
+      if Result.FileID.FullSlot >= lFile.MasterCount[GetMastersUpdated] then
         Result.FileID := lFile.FileFileID[GetMastersUpdated];
   end;
   mrFixedFormID := Result;
@@ -9785,8 +9786,8 @@ var
 
     if wbGameMode >= gmFO3 then begin
       case wbGameMode of
-        gmSF1                        : BasePtr.mrsVersion^ := 555;
-        gmFO76                       : BasePtr.mrsVersion^ := 184;
+        gmSF1                        : BasePtr.mrsVersion^ := 576;
+        gmFO76                       : BasePtr.mrsVersion^ := 201;
         gmFO4, gmFO4VR               : BasePtr.mrsVersion^ := 131;
         gmSSE, gmTES5VR, gmEnderalSE : BasePtr.mrsVersion^ := 44;
         gmTES5, gmEnderal            : BasePtr.mrsVersion^ := 43;
@@ -10134,7 +10135,7 @@ begin
 
   CurrentPtr := GetDataBasePtr;
   while NativeUInt(CurrentPtr) < NativeUInt(dcDataEndPtr) do begin
-    if (IsTES3Cell or (FRMRCount > 0)) and ((PwbSignature(CurrentPtr)^ = 'FRMR') or (PwbSignature(CurrentPtr)^ = 'NAM0')) then begin
+    if (IsTES3Cell or (FRMRCount > 0)) and ((PwbSignature(CurrentPtr)^ = 'FRMR') or (PwbSignature(CurrentPtr)^ = 'NAM0') or (PwbSignature(CurrentPtr)^ = 'MVRF') or (PwbSignature(CurrentPtr)^ = 'CNDT')) then begin
       if dcEndPtr = dcDataEndPtr then
         dcEndPtr := CurrentPtr;
       dcDataEndPtr := CurrentPtr;
@@ -12248,7 +12249,7 @@ var
   p         : PwbMainRecordStruct;
 begin
   if Assigned(dcEndPtr) then
-    if (wbGameMode = gmTES3) and (PwbSignature(dcBasePtr)^ = 'FRMR') then begin
+    if (wbGameMode = gmTES3) and ((PwbSignature(dcBasePtr)^ = 'FRMR') or (PwbSignature(dcBasePtr)^ = 'CNDT')) then begin
       Assert(not (mrsBasePtrAllocated in mrStates));
       dcDataBasePtr := dcBasePtr;
       dcDataEndPtr := dcEndPtr;
@@ -12347,7 +12348,7 @@ begin
   end;
 end;
 
-function TwbMainRecord.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbMainRecord.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
   Result := IsElementEditable(aElement) and not aElement.Def.Required;
 end;
@@ -13357,7 +13358,7 @@ begin
     end;
   end;
   Exclude(mrStates, mrsReferencesInjectedChecked);
-  if Result and aCanRemove and GetIsRemoveable then begin
+  if Result and aCanRemove and GetIsRemovable then begin
     Result := False;
     Remove;
   end;
@@ -15450,6 +15451,8 @@ begin
 
   if not Assigned(srDef) then
     Exit;
+  if GetDontShow then
+    Exit;
   DoInit(False);
 
   if Assigned(srValueDef) then
@@ -15796,12 +15799,14 @@ begin
   end;
 end;
 
-function TwbSubRecord.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbSubRecord.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
   Result := IsElementEditable(aElement)
+    and not (dfArrayStaticSize in srValueDef.DefFlags)
     and (srsIsArray in srStates)
     and Assigned(srValueDef)
-    and ((srValueDef as IwbArrayDef).ElementCount <= 0) and (Length(cntElements)>1);
+    and ( (srValueDef as IwbArrayDef).ElementCount <= 0 )
+    and ( (dfArrayCanBeEmpty in srValueDef.DefFlags) or (Length(cntElements) > 1) );
 
   if Result and (dfRemoveLastOnly in srValueDef.DefFlags) then
     Result := cntElements[High(cntElements)].Equals(aElement);
@@ -15971,7 +15976,7 @@ begin
           Break;
       end;
   end;
-  if Result and aCanRemove and GetIsRemoveable then begin
+  if Result and aCanRemove and GetIsRemovable then begin
     Result := False;
     Remove;
   end;
@@ -17637,7 +17642,7 @@ begin
   grDuplicateOf := aGroup;
 end;
 
-function TwbGroupRecord.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbGroupRecord.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
   Result := IsElementEditable(aElement);
 end;
@@ -19294,17 +19299,17 @@ begin
   Result := esReachable in eStates;
 end;
 
-function TwbElement.GetIsRemoveable: Boolean;
+function TwbElement.GetIsRemovable: Boolean;
 begin
   var Def := GetDef;
-  if Assigned(Def) and not Def.IsRemoveable(Self) then
+  if Assigned(Def) and not Def.IsRemovable(Self) then
     Exit(False);
 
   var ValueDef := GetValueDef;
-  if Assigned(ValueDef) and (ValueDef <> Def) and not ValueDef.IsRemoveable(Self) then
+  if Assigned(ValueDef) and (ValueDef <> Def) and not ValueDef.IsRemovable(Self) then
     Exit(False);
 
-  Result := not Assigned(eContainer) or IwbContainer(eContainer).IsElementRemoveable(Self);
+  Result := not Assigned(eContainer) or IwbContainer(eContainer).IsElementRemovable(Self);
 end;
 
 function TwbElement.InternalGetLinksTo: IwbElement;
@@ -19790,7 +19795,7 @@ end;
 function TwbElement.RemoveInjected(aCanRemove: Boolean): Boolean;
 begin
   Result := GetReferencesInjected;
-  if Result and GetIsRemoveable then begin
+  if Result and GetIsRemovable then begin
     Result := False;
     Remove;
   end;
@@ -20686,12 +20691,14 @@ begin
   arcDef.ToString(Result, Self, ctToStr);
 end;
 
-function TwbSubRecordArray.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbSubRecordArray.IsElementRemovable(const aElement: IwbElement): Boolean;
 var
   MinCount: Integer;
 begin
   MinCount := Max(1, arcDef.Count);
-  Result := IsElementEditable(aElement) and (Length(cntElements) > MinCount);
+  Result := IsElementEditable(aElement)
+    and not (dfArrayStaticSize in arcDef.DefFlags)
+    and (Length(cntElements) > MinCount);
 
   if Result and (dfRemoveLastOnly in arcDef.DefFlags) then
     Result := cntElements[High(cntElements)].Equals(aElement);
@@ -21340,7 +21347,7 @@ begin
   RMD.ToString(Result, Self, ctToStr);
 end;
 
-function TwbSubRecordStruct.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbSubRecordStruct.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
   Result := IsElementEditable(aElement) and (Length(cntElements) > 1) and ((srcDef.AllowUnordered or (dfStructFirstNotRequired in srcDef.DefFlags)) or not cntElements[0].Equals(aElement));
   if Result and Assigned(aElement.Def) then
@@ -21542,7 +21549,7 @@ begin
       lFinalBasePtr := Pointer(NativeUInt(aBasePtr) + NativeUInt(lWronglyAssumedFixedSizePerElement * ArrSize));
     end;
 
-  var lArrayElementNoName := ArrayDef.Element.Name = '';
+  //var lArrayElementNoName := ArrayDef.Element.Name = '';
 
   if ArrSize > 0 then
     while not VarSize or
@@ -21909,7 +21916,7 @@ begin
 
   for var lElementIdx := Pred(GetElementCount) downto 0 do begin
     var lElement := GetElement(lElementIdx);
-    if lElement.IsRemoveable then
+    if lElement.IsRemovable then
       lElement.Remove;
   end;
 end;
@@ -21994,7 +22001,7 @@ begin
     Exit(False);
 
   for var lElementIdx := Pred(lElementCount) downto 0 do
-    if not GetElement(lElementIdx).IsRemoveable then
+    if not GetElement(lElementIdx).IsRemovable then
       Exit(False);
 end;
 
@@ -22006,9 +22013,12 @@ begin
   Result := arrSorted;
 end;
 
-function TwbArray.IsElementRemoveable(const aElement: IwbElement): Boolean;
+function TwbArray.IsElementRemovable(const aElement: IwbElement): Boolean;
 begin
-  Result := IsElementEditable(aElement) and ((vbValueDef as IwbArrayDef).ElementCount <= 0) { and (Length(cntElements)>1)};
+  Result := IsElementEditable(aElement)
+    and not (dfArrayStaticSize in vbValueDef.DefFlags)
+    and ((vbValueDef as IwbArrayDef).ElementCount <= 0)
+    { and (Length(cntElements)>1)};
 
   if Result and (dfRemoveLastOnly in vbValueDef.DefFlags) then
     Result := cntElements[High(cntElements)].Equals(aElement);
@@ -23138,7 +23148,7 @@ begin
       Result := False;
 end;
 
-function TwbFlag.GetIsRemoveable: Boolean;
+function TwbFlag.GetIsRemovable: Boolean;
 begin
   Result := wbIsInternalEdit or GetContainer.IsEditable;
 end;

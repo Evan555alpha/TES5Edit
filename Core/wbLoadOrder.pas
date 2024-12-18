@@ -541,7 +541,9 @@ begin
   for i := Low(_ModulesLoadOrder) to High(_ModulesLoadOrder) do
     _ModulesLoadOrder[i].miCombinedIndex := i;
 
-  if wbGameMode <> gmSF1 then begin
+  if   (not wbIsStarfield)
+    or wbRedPill
+  then begin
     TwbModuleInfo.AddNewModule('<new file>.esp', True);
     with TwbModuleInfo.AddNewModule('<new file>.esp', True)^ do begin
       Include(miFlags, mfHasESMFlag);
@@ -553,6 +555,15 @@ begin
       with TwbModuleInfo.AddNewModule('<new file>.esp', True)^ do begin
         Include(miFlags, mfHasESMFlag);
         Include(miFlags, mfHasLightFlag);
+        Include(miFlags, mfIsESM);
+      end;
+    end;
+    if wbIsMediumSupported then begin
+      with TwbModuleInfo.AddNewModule('<new file>.esp', True)^ do
+        Include(miFlags, mfHasMediumFlag);
+      with TwbModuleInfo.AddNewModule('<new file>.esp', True)^ do begin
+        Include(miFlags, mfHasESMFlag);
+        Include(miFlags, mfHasMediumFlag);
         Include(miFlags, mfIsESM);
       end;
     end;
@@ -578,6 +589,13 @@ begin
           Include(miFlags, mfIsESM);
         end;
       end;
+      if wbIsMediumSupported then begin
+        with TwbModuleInfo.AddNewModule('<new file>.esm', True)^ do begin
+          Include(miFlags, mfHasMediumFlag);
+          Include(miFlags, mfHasESMFlag);
+          Include(miFlags, mfIsESM);
+        end;
+      end;
       if wbIsOverlaySupported then begin
         with TwbModuleInfo.AddNewModule('<new file>.esm', True)^ do begin
           Include(miFlags, mfHasOverlayFlag);
@@ -588,7 +606,7 @@ begin
     end;
   end;
 
-  if wbGameMode <> gmSF1 then begin
+  if not wbIsStarfield then begin
     if wbIsLightSupported then begin
       with TwbModuleInfo.AddNewModule('<new file>.esl', True)^ do begin
         Include(miFlags, mfHasESMFlag);

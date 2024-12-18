@@ -58,12 +58,12 @@ var
     Major   : 4;
     Minor   : 1;
     Release : 5;
-    Build   : 'g';
+    Build   : 'l';
     Title   : '';
   );
 
 const
-  wbWhatsNewVersion : Integer = 04010507;
+  wbWhatsNewVersion : Integer = 04010511;
   wbDeveloperMessageVersion : Integer = 04010507;
   wbDevCRC32App : Cardinal = $FFFFFFE4;
 
@@ -248,6 +248,7 @@ var
   wbCollapseDestruction              : Boolean    = True;
   wbCollapseLocations                : Boolean    = True;
   wbCollapseNavmesh                  : Boolean    = True;
+  wbDontDrawColorText                : Boolean    = True;
   wbReportInjected                   : Boolean    = True;
   wbNoFullInShortName                : Boolean    = True;
   wbNoIndexInAliasSummary            : Boolean    = True;
@@ -359,6 +360,7 @@ var
   wbMOHookFile                       : string;
 
   wbStarfieldIsABugInfestedHellhole  : Boolean    = True;
+  wbRedPill                          : Boolean    = False;
   wbAlwaysLoadGameMaster             : Boolean    = True;
 
   wbSpeedOverMemory                  : Boolean    = False;
@@ -640,48 +642,51 @@ type
 
 type
   TwbDefFlag = (
-    dfInternalEditOnly,
-    dfZeroSortKey, // not implemented for all Defs!!!
-    dfNotAlignable,
-    dfCollapsed,
-    dfNoReport,
-    dfTranslatable,
     dfAllowAnyMember,
-    dfStructFirstNotRequired,
-    dfDontSave,
+    dfArrayCanBeEmpty,
+    dfArrayStaticSize,
+    dfCollapsed,
     dfDontAssign,
-    dfUseLoadOrder,
-    dfMustBeUnion,
-    dfMergeIfMultiple,
+    dfDontSave,
     dfExcludeFromBuildRef,
     dfFastAssign,
-    dfIndexEditorID,
-    dfSummaryMembersNoName,
-    dfSummaryNoName,
-    dfSummaryNoSortKey,
-    dfSummaryNoPassthrough,
-    dfSummarySelfAsShortName,
-    dfSummaryMembersShowIgnore,
-    dfSummaryShowIgnore,
-    dfSummaryExcludeNULL,
-    dfUnionStaticResolve,
+    dfFloatSometimesBroken,
     dfHideText,
-    dfRemoveLastOnly,
+    dfIncludeValueInDisplaySignature,
+    dfIndexEditorID,
+    dfInternalEditOnly,
+    dfIsRecordFlags,
+    dfMergeIfMultiple,
+    dfMustBeUnion,
+    dfNoCopyAsOverride,
     dfNoMove,
+    dfNoReport,
+    dfNotAlignable,
+    dfRemoveLastOnly,
+    dfSkipImplicitEdit,
+    dfStructFirstNotRequired,
+    dfSummaryExcludeNULL,
+    dfSummaryMembersNoName,
+    dfSummaryMembersShowIgnore,
+    dfSummaryNoName,
+    dfSummaryNoPassthrough,
+    dfSummaryNoSortKey,
+    dfSummarySelfAsShortName,
+    dfSummaryShowIgnore,
+    dfTemplate,
+    dfTranslatable,
+    dfUnionStaticResolve,
+    dfUseLoadOrder,
+    dfZeroSortKey, // not implemented for all Defs!!!
+
     dfTerminator,
     dfHasZeroTerminator,
     dfNoZeroTerminator,
-    dfArrayCanBeEmpty,
-    dfFloatSometimesBroken,
-    dfTemplate,
+
     dfCanContainFormID,
     dfCanContainReflection,
-    dfUnmappedFormID,
     dfCanContainUnmappedFormID,
-    dfIncludeValueInDisplaySignature,
-    dfSkipImplicitEdit,
-    dfNoCopyAsOverride,
-    dfIsRecordFlags
+    dfUnmappedFormID
   );
 
   TwbDefFlags = set of TwbDefFlag;
@@ -1059,7 +1064,7 @@ type
     function GetNativeValue: Variant;
     procedure SetNativeValue(const aValue: Variant);
     function GetIsEditable: Boolean;
-    function GetIsRemoveable: Boolean;
+    function GetIsRemovable: Boolean;
     function GetIsClearable: Boolean;
     procedure RequestStorageChange(var aBasePtr, aEndPtr: Pointer; aNewSize: Cardinal);
     function GetConflictPriority: TwbConflictPriority;
@@ -1232,8 +1237,8 @@ type
       read GetNativeValue
       write SetNativeValue;
 
-    property IsRemoveable: Boolean
-      read GetIsRemoveable;
+    property IsRemovable: Boolean
+      read GetIsRemovable;
     property IsClearable: Boolean
       read GetIsClearable;
 
@@ -1368,7 +1373,7 @@ type
 
     function LastElement: IwbElement;
 
-    function IsElementRemoveable(const aElement: IwbElement): Boolean;
+    function IsElementRemovable(const aElement: IwbElement): Boolean;
     function IsElementEditable(const aElement: IwbElement): Boolean;
 
     function IndexOf(const aElement: IwbElement): Integer;
@@ -2246,7 +2251,7 @@ type
   TwbIntegerDefFormaterUnionDecider = reference to function(const aElement: IwbElement): Integer;
   TwbIntOverlayCallback             = reference to function(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): Int64;
   TwbIntToStrCallback               = reference to function(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
-  TwbIsRemoveableCallback           = reference to function(const aElement: IwbElement): Boolean;
+  TwbIsRemovableCallback           = reference to function(const aElement: IwbElement): Boolean;
   TwbIsSortedCallback               = reference to function(const aContainer: IwbContainer): Boolean;
   TwbLinksToCallback                = reference to function(const aElement: IwbElement): IwbElement;
   TwbSetToDefaultCallback           = reference to function(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Boolean;
@@ -2273,6 +2278,7 @@ type
     function SetAfterLoad(const aAfterLoad : TwbAfterLoadCallback): IwbNamedDef;
     function SetAfterSet(const aAfterSet : TwbAfterSetCallback): IwbNamedDef;
     function SetDontShow(const aDontShow : TwbDontShowCallback): IwbNamedDef;
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbNamedDef;
 
     function GetTreeHead: Boolean;              // Is the element expected to be a "header record" in the tree navigator
     procedure SetTreeHead(aValue: Boolean);     // Make the element a "header record" in the tree navigator;
@@ -2282,7 +2288,7 @@ type
     procedure ToString(var Result : string; const aElement: IwbElement; aType: TwbCallbackType);
     function GetSummaryLinksTo(const aElement: IwbElement): IwbElement;
 
-    function IsRemoveable(const aElement: IwbElement): Boolean;
+    function IsRemovable(const aElement: IwbElement): Boolean;
 
     function SetSummaryName(const aName: string): IwbNamedDef;
 
@@ -2476,6 +2482,7 @@ type
     function SetAfterLoad(const aAfterLoad : TwbAfterLoadCallback): IwbRecordMemberDef{Self};
     function SetAfterSet(const aAfterSet : TwbAfterSetCallback): IwbRecordMemberDef{Self};
     function SetDontShow(const aDontShow : TwbDontShowCallback): IwbRecordMemberDef{Self};
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbRecordMemberDef;
     function SetToStr(const aToStr : TwbToStrCallback): IwbRecordMemberDef{Self};
     function SetSummaryLinksToCallback(const aCallback: TwbLinksToCallback): IwbRecordMemberDef{Self};
 
@@ -2525,7 +2532,7 @@ type
     function SetLinksToCallback(const aCallback: TwbLinksToCallback): IwbValueDef{Self};
     function SetSummaryLinksToCallback(const aCallback: TwbLinksToCallback): IwbValueDef{Self};
     function SetToStr(const aToStr : TwbToStrCallback): IwbValueDef{Self};
-    function SetIsRemovable(const aCallback: TwbIsRemoveableCallback): IwbValueDef{Self};
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbValueDef{Self};
     function SetStaticEditInfo(aEditInfo: PwbStringArray): IwbValueDef{Self};
 
     function SetSetToDefault(const aCallback: TwbSetToDefaultCallback): IwbValueDef{Self};
@@ -2633,6 +2640,7 @@ type
 
   IwbSubRecordStructDef = interface(IwbRecordMemberDef)
     ['{B5441812-5229-488B-AEA6-C182CEBED441}']
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbSubRecordStructDef;
     function SetSummaryKey(const aSummaryKey: array of Integer): {Self}IwbSubRecordStructDef;
     function SetSummaryMemberPrefixSuffix(aIndex: Integer; const aPrefix, aSuffix: string): {Self}IwbSubRecordStructDef;
     function SetSummaryMemberMaxDepth(aIndex, aMaxDepth: Integer): {Self}IwbSubRecordStructDef;
@@ -4904,13 +4912,17 @@ var
 
 function wbDefToName(const aDef: IwbDef): string;
 function wbDefsToPath(const aDefs: TwbDefPath): string;
-function wbIsSkyrim: Boolean; inline;
+
+function wbIsOblivion: Boolean; inline;
 function wbIsFallout3: Boolean; inline;
+function wbIsFalloutNV: Boolean; inline;
+function wbIsSkyrim: Boolean; inline;
+function wbIsSkyrimSE: Boolean; inline;
 function wbIsFallout4: Boolean; inline;
 function wbIsFallout76: Boolean; inline;
+function wbIsStarfield: Boolean; inline;
 function wbIsLightSupported: Boolean; inline;
 function wbIsMediumSupported: Boolean; inline;
-function wbIsStarfield: Boolean; inline;
 function wbIsOverlaySupported: Boolean; inline;
 
 procedure ReportDefs;
@@ -5482,14 +5494,29 @@ begin
     wbRecordDefs[i].rdeDef.Report(nil);
 end;
 
-function wbIsSkyrim: Boolean; inline;
+function wbIsOblivion: Boolean; inline;
 begin
-  Result := wbGameMode in [gmTES5, gmEnderal, gmTES5VR, gmSSE, gmEnderalSE];
+  Result := wbGameMode in [gmTES4];
 end;
 
 function wbIsFallout3: Boolean; inline;
 begin
   Result := wbGameMode in [gmFO3, gmFNV];
+end;
+
+function wbIsFalloutNV: Boolean; inline;
+begin
+  Result := wbGameMode in [gmFNV];
+end;
+
+function wbIsSkyrim: Boolean; inline;
+begin
+  Result := wbGameMode in [gmTES5, gmEnderal, gmTES5VR, gmSSE, gmEnderalSE];
+end;
+
+function wbIsSkyrimSE: Boolean; inline;
+begin
+  Result := wbGameMode in [gmTES5VR, gmSSE, gmEnderalSE];
 end;
 
 function wbIsFallout4: Boolean; inline;
@@ -5823,7 +5850,7 @@ type
     ndAfterSet               : TwbAfterSetCallback;
     ndToStr                  : TwbToStrCallback;
     ndDontShow               : TwbDontShowCallback;
-    ndIsRemoveable           : TwbIsRemoveableCallback;
+    ndIsRemovable           : TwbIsRemovableCallback;
     ndTerminator             : Boolean;
     ndUnused                 : Boolean;
     ndTreeHead               : Boolean;
@@ -5862,6 +5889,7 @@ type
     function SetAfterLoad(const aAfterLoad : TwbAfterLoadCallback): IwbNamedDef;
     function SetAfterSet(const aAfterSet : TwbAfterSetCallback): IwbNamedDef;
     function SetDontShow(const aDontShow : TwbDontShowCallback): IwbNamedDef;
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbNamedDef;
 
     function GetTreeHead: Boolean;              // Is the element expected to be a "header record" in the tree navigator
     procedure SetTreeHead(aValue: Boolean);     // Make the element a "header record" in the tree navigator;
@@ -5871,7 +5899,7 @@ type
     procedure ToString(var Result : string; const aElement: IwbElement; aType: TwbCallbackType); reintroduce; virtual;
     function GetSummaryLinksTo(const aElement: IwbElement): IwbElement; virtual;
 
-    function IsRemoveable(const aElement: IwbElement): Boolean; virtual;
+    function IsRemovable(const aElement: IwbElement): Boolean; virtual;
 
     function SetSummaryName(const aName: string): IwbNamedDef;
   end;
@@ -6113,6 +6141,7 @@ type
     function SetAfterLoad(const aAfterLoad : TwbAfterLoadCallback): IwbRecordMemberDef{Self};
     function SetAfterSet(const aAfterSet : TwbAfterSetCallback): IwbRecordMemberDef{Self};
     function SetDontShow(const aDontShow : TwbDontShowCallback): IwbRecordMemberDef{Self};
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbRecordMemberDef;
     function SetToStr(const aToStr : TwbToStrCallback): IwbRecordMemberDef{Self};
     function SetSummaryLinksToCallback(const aCallback: TwbLinksToCallback): IwbRecordMemberDef{Self};
     function SetRequired(const aRequired : Boolean = True): IwbRecordMemberDef{Self};
@@ -6169,6 +6198,7 @@ type
     function SetAfterLoad(const aAfterLoad : TwbAfterLoadCallback): IwbRecordMemberDef{Self};
     function SetAfterSet(const aAfterSet : TwbAfterSetCallback): IwbRecordMemberDef{Self};
     function SetDontShow(const aDontShow : TwbDontShowCallback): IwbRecordMemberDef{Self};
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbRecordMemberDef;
     function SetToStr(const aToStr : TwbToStrCallback): IwbRecordMemberDef{Self};
     function SetSummaryLinksToCallback(const aCallback: TwbLinksToCallback): IwbRecordMemberDef{Self};
     function SetRequired(const aRequired : Boolean = True): IwbRecordMemberDef{Self};
@@ -6313,6 +6343,7 @@ type
     function ToSummaryInternal(aDepth: Integer; const aElement: IwbElement; var aLinksTo: IwbElement): string; override;
 
     {---IwbSubRecordStructDef---}
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbSubRecordStructDef;
     function SetSummaryKey(const aSummaryKey: array of Integer): {Self}IwbSubRecordStructDef;
     function SetSummaryMemberPrefixSuffix(aIndex: Integer; const aPrefix, aSuffix: string): {Self}IwbSubRecordStructDef;
     function SetSummaryMemberMaxDepth(aIndex, aMaxDepth: Integer): {Self}IwbSubRecordStructDef;
@@ -6461,7 +6492,7 @@ type
     function SetLinksToCallback(const aCallback: TwbLinksToCallback): IwbValueDef; virtual;
     function SetSummaryLinksToCallback(const aCallback: TwbLinksToCallback): IwbValueDef; virtual;
     function SetToStr(const aToStr : TwbToStrCallback): IwbValueDef; virtual;
-    function SetIsRemovable(const aCallback: TwbIsRemoveableCallback): IwbValueDef; virtual;
+    function SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbValueDef; virtual;
     function SetStaticEditInfo(aEditInfo: PwbStringArray): IwbValueDef{Self};
 
     function SetSetToDefault(const aCallback: TwbSetToDefaultCallback): IwbValueDef{Self};
@@ -10321,7 +10352,7 @@ begin
     Self.ndTreeHead := GetTreeHead;
     Self.ndTreeBranch := GetTreeBranch;
     Self.ndToStr := ndToStr;
-    Self.ndIsRemoveable := ndIsRemoveable;
+    Self.ndIsRemovable := ndIsRemovable;
     Self.ndSummaryLinksToCallback := ndSummaryLinksToCallback;
     Self.ndSummaryName := ndSummaryName;
   end;
@@ -10495,9 +10526,9 @@ begin
   inherited;
 end;
 
-function TwbNamedDef.IsRemoveable(const aElement: IwbElement): Boolean;
+function TwbNamedDef.IsRemovable(const aElement: IwbElement): Boolean;
 begin
-  Result := not Assigned(ndIsRemoveable) or ndIsRemoveable(aElement);
+  Result := not Assigned(ndIsRemovable) or ndIsRemovable(aElement);
 end;
 
 function TwbNamedDef.MakeSingularName(const aName: string): string;
@@ -10535,6 +10566,15 @@ begin
 
   Result := Self;
   ndDontShow := aDontShow;
+end;
+
+function TwbNamedDef.SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbNamedDef;
+begin
+  if defIsLocked then
+    Exit(TwbNamedDef(Duplicate).SetIsRemovable(aCallback));
+
+  Result := Self;
+  ndIsRemovable := aCallback;
 end;
 
 function TwbNamedDef.SetSummaryName(const aName: string): IwbNamedDef;
@@ -11628,6 +11668,15 @@ begin
   srValue := (srValue as IwbDefInternal).SetParent(Self, False) as IwbValueDef;
 end;
 
+function TwbSubRecordDef.SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbRecordMemberDef;
+begin
+  if defIsLocked then
+    Exit(TwbSubRecordDef(Duplicate).SetIsRemovable(aCallback));
+
+  Result := Self;
+  ndIsRemovable := aCallback;
+end;
+
 function TwbSubRecordDef.SetLinksToCallbackOnValue(const aCallback: TwbLinksToCallback): IwbSubRecordDef;
 begin
   if defIsLocked then
@@ -12294,6 +12343,15 @@ begin
   defReported := True;
 end;
 
+function TwbSubRecordStructDef.SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbSubRecordStructDef;
+begin
+  if defIsLocked then
+    Exit(TwbSubRecordStructDef(Duplicate).SetIsRemovable(aCallback));
+
+  Result := Self;
+  ndIsRemovable := aCallback;
+end;
+
 function TwbSubRecordStructDef.SetSummaryDelimiter(const aDelimiter: string): IwbSubRecordStructDef;
 begin
   if defIsLocked then
@@ -12548,8 +12606,6 @@ function TwbSubRecordUnionDef.GetMemberIndexFor(const aContainer     : IwbContai
                                                       aSignature     : TwbSignature;
                                                 const aDataContainer : IwbDataContainer)
                                                                      : Integer;
-var
-  i: Integer;
 begin
   if Assigned(sruDecider) then begin
     var lDecidedMemberIdx := sruDecider(aContainer);
@@ -13629,7 +13685,8 @@ end;
 
 function TwbArrayDef.GetCanAddTo: Boolean;
 begin
-  Result := arCanAddTo;
+  Result := arCanAddTo
+    and not (dfArrayStaticSize in DefFlags);
 end;
 
 function TwbArrayDef.GetCanBeZeroSize: Boolean;
@@ -13719,7 +13776,12 @@ end;
 
 function TwbArrayDef.GetIsVariableSizeInternal: Boolean;
 begin
-  Result := (arCount <= 0) or arElement.IsVariableSize;
+  Result :=
+    not (dfArrayStaticSize in DefFlags)
+    and (
+            (arCount <= 0)
+         or arElement.IsVariableSize
+        );
 end;
 
 function TwbArrayDef.GetPrefixCount(aBasePtr: Pointer): Cardinal;
@@ -15004,7 +15066,7 @@ begin
         else
           s :=  wbGetUnknownIntString(i);
       if GetFlagDontShow(aElement, i) then
-        s := '(' + s + ')';
+        s := '<Unknown: ' + IntToStr(i) + '>';
       if wbShowFlagEnumValue then
         s := s + ' (0x' + IntToHex(Int64(1) shl i, 8) + ')';
       Add(s);
@@ -16410,7 +16472,8 @@ begin
       case fdKind of
         fkHalf  : lSize := SizeOf(THalfFloat)+Ord(ndTerminator);
         fkSingle: lSize := SizeOf(Single)+Ord(ndTerminator);
-        fkDouble: lSize := SizeOf(Double)+Ord(ndTerminator);
+      else
+        {fkDouble:} lSize := SizeOf(Double)+Ord(ndTerminator);
       end;
       if aSource.DataSize = lSize then begin
         aTargetDataContainer.CopyFrom(lSourceBasePtr, lSize);
@@ -16474,7 +16537,8 @@ begin
   case fdKind of
     fkHalf  : lSize := SizeOf(THalfFloat)+Ord(ndTerminator);
     fkSingle: lSize := SizeOf(Single)+Ord(ndTerminator);
-    fkDouble: lSize := SizeOf(Double)+Ord(ndTerminator);
+  else
+    {fkDouble:} lSize := SizeOf(Double)+Ord(ndTerminator);
   end;
   aElement.RequestStorageChange(aBasePtr, aEndPtr, lSize);
 
@@ -16549,7 +16613,8 @@ begin
   case fdKind of
     fkHalf  : lSize := SizeOf(THalfFloat)+Ord(ndTerminator);
     fkSingle: lSize := SizeOf(Single)+Ord(ndTerminator);
-    fkDouble: lSize := SizeOf(Double)+Ord(ndTerminator);
+  else
+    {fkDouble:} lSize := SizeOf(Double)+Ord(ndTerminator);
   end;
   aElement.RequestStorageChange(aBasePtr, aEndPtr, lSize);
   if Assigned(aBasePtr) then begin
@@ -16720,9 +16785,9 @@ begin
         case fdKind of
           fkHalf: begin
             if PHalfFloat(aBasePtr)^ = HalfPosMax then
-              Result := MaxHalf
+              Exit(MaxHalf)
             else if PHalfFloat(aBasePtr)^ = HalfNegMax then
-              Result := -MaxHalf
+              Exit(-MaxHalf)
             else begin
               Value := HalfToFloat(PHalfFloat(aBasePtr)^);
             end;
@@ -16737,7 +16802,8 @@ begin
             else
               Value := PSingle(aBasePtr)^;
           end;
-          fkDouble: begin
+        else
+          {fkDouble:} begin
             if PInt64(aBasePtr)^ = $7FEFFFFFFFFFFFFF then
               Exit(maxDouble)
             else if PInt64(aBasePtr)^ = $FFEFFFFFFFFFFFFF then
@@ -17183,7 +17249,7 @@ begin
         Exit;
 
       FormID := lMainRecord.LoadOrderFormID;
-      NativeValue := FormID.ToCardinal;
+      //NativeValue := FormID.ToCardinal;
     end else begin
       NativeValue := aSource.NativeValue;
       FormID := TwbFormID.FromCardinal(NativeValue);
@@ -18052,7 +18118,7 @@ begin
         end;
     end;
     if j >= 0 then
-      Result := IntToHex(i, 2) + ':' + Result
+      Result := IntToHex(j, 2) + ':' + Result
     else
       Result := 'XX:' + Result;
   end;
@@ -19201,7 +19267,7 @@ function TwbCallbackDef.GetEditType(const aElement: IwbElement): TwbEditType;
 var
   s: string;
 begin
-  Result := etDefault;
+  //Result := etDefault;
   s := cdToStr(0, aElement, ctEditType);
   if SameText(s, 'ComboBox') then
     Result := etComboBox
@@ -19404,13 +19470,13 @@ begin
   ndDontShow := aDontShow;
 end;
 
-function TwbValueDef.SetIsRemovable(const aCallback: TwbIsRemoveableCallback): IwbValueDef;
+function TwbValueDef.SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbValueDef;
 begin
   if defIsLocked then
     Exit(TwbValueDef(Duplicate).SetIsRemovable(aCallback));
 
   Result := Self;
-  ndIsRemoveable := aCallback;
+  ndIsRemovable := aCallback;
 end;
 
 procedure TwbValueDef.SetLinksTo(aBasePtr, aEndPtr: Pointer; const aElement, aValue: IwbElement);
@@ -22988,6 +23054,15 @@ begin
   ndDontShow := aDontShow;
 end;
 
+function TwbRecordMemberDef.SetIsRemovable(const aCallback: TwbIsRemovableCallback): IwbRecordMemberDef;
+begin
+  if defIsLocked then
+    Exit(TwbRecordMemberDef(Duplicate).SetIsRemovable(aCallback));
+
+  Result := Self;
+  ndIsRemovable := aCallback;
+end;
+
 function TwbRecordMemberDef.SetRequired(const aRequired: Boolean): IwbRecordMemberDef;
 begin
   if defIsLocked then
@@ -23313,7 +23388,9 @@ function TwbBaseStringDef.GetEditType(aBasePtr, aEndPtr: Pointer; const aElement
 begin
   inherited;
   if Assigned(bsdFormater) then
-    Result := bsdFormater.EditType[aElement];
+    Result := bsdFormater.EditType[aElement]
+  else
+    Result := etDefault;
 
   if Assigned(ndToStr) then begin
     var s := '';
@@ -23798,9 +23875,9 @@ end;
 
 procedure TwbGuidDef.FromStringInternal(aBasePtr, aEndPtr: Pointer; const aElement: IwbElement; const aValue: string);
 begin
-  var lLength := 0;
-  if Assigned(aBasePtr) and Assigned(aEndPtr) then
-    lLength := NativeInt(aEndPtr) - NativeInt(aBasePtr);
+  //var lLength := 0;
+  //if Assigned(aBasePtr) and Assigned(aEndPtr) then
+  //  lLength := NativeInt(aEndPtr) - NativeInt(aBasePtr);
 
   aElement.RequestStorageChange(aBasePtr, aEndPtr, 16);
 

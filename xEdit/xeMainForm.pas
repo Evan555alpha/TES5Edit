@@ -866,7 +866,7 @@ type
     function FindNodeOrAncestorForElement(const aElement: IwbElement): PVirtualNode;
     function FindNodeForElementIn(aParent: PVirtualNode; const aElement: IwbElement): PVirtualNode;
     function EditWarn: Boolean;
-    function RemoveableSelection(ContainsChilds: PBoolean): TNodeArray;
+    function RemovableSelection(ContainsChilds: PBoolean): TNodeArray;
     function EditableSelection(ContainsChilds: PBoolean): TNodeArray;
 
     function SelectionIncludesNonCopyNewRecords: Boolean;
@@ -2864,8 +2864,6 @@ begin
 
         if not (AsNew or AsWrapper) then
           AllModules := AllModules.FilteredBy(function(a: PwbModuleInfo): Boolean
-            var
-              i: Integer;
             begin
               Result := mfTemplate in a.miFlags;
               if not Result then
@@ -3503,7 +3501,6 @@ begin
     end;
 
     s := ChangeFileExt(ExtractFileName(CompareFile), '');
-    i := 0;
 
     repeat
       if not InputQuery('Delta Patch Filename', 'Please specify the name of the delta patch (without extension)', s) then
@@ -4972,7 +4969,7 @@ begin
     TTask.Run(procedure begin
       Sleep(1);
     end).Wait;
-  end).Resume;
+  end).Start;
   {$ENDIF}
 
   AutoDone := False;
@@ -7986,7 +7983,6 @@ var
   NodeDatas        : PViewNodeDatas;
   SourceColumn     : Integer;
   SourceElement    : IwbElement;
-  SourceMainRecord : IwbMainRecord;
   i, j             : Integer;
   TargetColumns    : array of Integer;
 begin
@@ -8180,7 +8176,7 @@ begin
                 if Assigned(Element) then begin
                   TargetMainRecord := Element.ContainingMainRecord;
                   if Assigned(TargetMainRecord) and MainRecords[k].Equals(TargetMainRecord) then begin
-                    if Element.IsRemoveable then begin
+                    if Element.IsRemovable then begin
                       if not EditWarn then
                         Exit;
                       Element.Remove;
@@ -8385,10 +8381,9 @@ var
   SelectedNodes               : TNodeArray;
   SelectedElements            : TDynElements;
   Count                       : Cardinal;
-  i, p                        : Integer;
+  p                           : Integer;
   s                           : string;
   bShowMessages               : Boolean;
-  regexp                      : TPerlRegEx;
   PrevMaxMessageInterval      : UInt64;
 begin
   // prevent execution of new scripts if already executing
@@ -8430,8 +8425,6 @@ begin
       else
         s := 'Applying script';
       PerformLongAction(s, '', procedure
-      var
-        i: Integer;
       begin
         vstNav.BeginUpdate;
         NavCleanupCollapsedNodeChildren;
@@ -9866,7 +9859,10 @@ begin
           Caption := 'Edit Value';
 
           for i := 0 to Pred(Flags.FlagCount) do begin
-            CheckListBox1.AddItem(Flags.Flags[i, False], nil);
+            if Flags.FlagDontShow[Element, i] then
+              CheckListBox1.AddItem('', nil)
+            else
+              CheckListBox1.AddItem(Flags.Flags[i, False], nil);
             CheckListBox1.Checked[i] := (i < Length(EditValue)) and (EditValue[i+1] = '1');
           end;
 
@@ -9955,17 +9951,9 @@ procedure TfrmMain.mniViewHeaderCopyIntoClick(Sender: TObject);
 var
   Column                      : TColumnIndex;
   MainRecord                  : IwbMainRecord;
-  MainRecord2                 : IwbMainRecord;
   Master                      : IwbMainRecord;
-  ReferenceFile               : IwbFile;
-  sl                          : TStringList;
-  i, j                        : Integer;
   AsNew                       : Boolean;
   AsWrapper                   : Boolean;
-  EditorID                    : string;
-  LeveledListEntries          : IwbContainerElementRef;
-  LeveledListEntry            : IwbContainerElementRef;
-  IsLight                       : Boolean;
 begin
   if not wbEditAllowed then
     Exit;
@@ -10049,7 +10037,6 @@ end;
 procedure TfrmMain.mniViewHeaderRemoveClick(Sender: TObject);
 var
   Column                      : TColumnIndex;
-  NodeData                    : PNavNodeData;
   Node                        : PVirtualNode;
   Element                     : IwbElement;
   DialogResult                : Integer;
@@ -10417,7 +10404,6 @@ var
   Container   : IwbContainerElementRef;
   Container2  : IwbContainerElementRef;
   Race        : string;
-  FormID      : TwbFormID;
   FormIDs     : array of record
                            FormID    : TwbFormID;
                            LoadOrder : Integer;
@@ -10492,7 +10478,7 @@ begin
 
   UserWasActive := True;
 
-  Selection := RemoveableSelection(@ContainsChilds);
+  Selection := RemovableSelection(@ContainsChilds);
 
   if Length(Selection) < 1 then
     Exit;
@@ -10510,9 +10496,9 @@ begin
   end
   else begin
     if ContainsChilds then
-      DialogResult := MessageDlg('Are you sure you want to permanently remove the ' + IntToStr(Length(Selection)) + ' removeable selected records and all other records they contain?', mtWarning, [mbYes, mbNo], 0)
+      DialogResult := MessageDlg('Are you sure you want to permanently remove the ' + IntToStr(Length(Selection)) + ' removable selected records and all other records they contain?', mtWarning, [mbYes, mbNo], 0)
     else
-      DialogResult := MessageDlg('Are you sure you want to permanently remove the ' + IntToStr(Length(Selection)) + ' removeable selected records?', mtConfirmation, [mbYes, mbNo], 0);
+      DialogResult := MessageDlg('Are you sure you want to permanently remove the ' + IntToStr(Length(Selection)) + ' removable selected records?', mtConfirmation, [mbYes, mbNo], 0);
   end;
 
   if DialogResult <> mrYes then
@@ -10684,7 +10670,6 @@ var
   MainRecord                  : IwbMainRecord;
   MainRecord2                 : IwbMainRecord;
   NameRec                     : IwbContainerElementRef;
-  i,j                         : Integer;
   Elements                    : TDynElements;
 begin
   if not wbEditAllowed then
@@ -11548,6 +11533,8 @@ var
   DirtyInfo                   : PLOOTPluginInfo;
 
 begin
+  PluginCRC32 := 0;
+
   AutoModeCheckForITM := wbToolMode in [tmCheckForITM];
   if AutoModeCheckForITM then Operation := 'Count' else Operation := 'Remov';
 
@@ -11656,7 +11643,7 @@ begin
                   PluginCRC32 := CRC32;
                 end;
 
-              if not NodeData.Element.IsRemoveable then
+              if not NodeData.Element.IsRemovable then
                 PostAddMessage('Can''t remove: ' + NodeData.Element.Name)
               else begin
                 if not AutoModeCheckForITM then begin
@@ -11750,7 +11737,6 @@ begin
   // since a plugin will always either be clean or it will be dirty
   PostAddMessage('');
   PostAddMessage('LOOT Masterlist Entries');
-  FileChanged := True;
   for i := Low(LOOTPluginInfos) to High(LOOTPluginInfos) do begin
     FileChanged := (i=0) or not SameText(LOOTPluginInfos[i].Plugin, LOOTPluginInfos[Pred(i)].Plugin);
     PostAddMessage(LOOTDirtyInfo(LOOTPluginInfos[i], FileChanged));
@@ -11923,7 +11909,7 @@ begin
   if Assigned(NodeDatas) then
     for i := Low(ActiveRecords) to High(ActiveRecords) do begin
       Element := NodeDatas[i].Element;
-      if Assigned(Element) and Element.IsRemoveable then begin
+      if Assigned(Element) and Element.IsRemovable then begin
         if not EditWarn then
           Exit;
         Element.Remove;
@@ -12487,7 +12473,6 @@ var
     LowestFormID     : Cardinal;
   begin
     LowestFormID := $800;
-    Signatures := nil;
 
     Result := False;
 
@@ -12776,7 +12761,7 @@ begin
     PerformLongAction('Changing FormIDs', 'Processed Records: 0', procedure
     var
       AnyErrors                   : Boolean;
-      i, j, k, l: Integer;
+      i,  k, l                    : Integer;
       MainRecord                  : IwbMainRecord;
       ReferencedBy                : TDynMainRecords;
       Master                      : IwbMainRecord;
@@ -12785,7 +12770,6 @@ begin
       OldFormID                   : TwbFormID;
     begin
       AnyErrors := False;
-      j := 0;
       for k := Low(MainRecords) to High(MainRecords) do begin
         MainRecord := MainRecords[k];
         OldFormID := MainRecord.LoadOrderFormID;
@@ -13989,12 +13973,9 @@ procedure TfrmMain.mniNavOptionsClick(Sender: TObject);
 var
   ct: TConflictThis;
   ca: TConflictAll;
-  i: integer;
   PatronSet: Boolean;
 begin
   with TfrmOptions.Create(Self) do try
-    PatronSet := False;
-
     pnlFontRecords.Font := vstNav.Font;
     pnlFontMessages.Font := mmoMessages.Font;
     pnlFontViewer.Font := Self.Font; LoadFont(Settings, 'UI', 'FontViewer', pnlFontViewer.Font);
@@ -14806,7 +14787,7 @@ begin
   mniNavRemove.Visible :=
     not wbTranslationMode and
     wbEditAllowed and
-    (Length(RemoveableSelection(nil)) > 0);
+    (Length(RemovableSelection(nil)) > 0);
   mniNavMarkModified.Visible :=
     not wbTranslationMode and
     wbEditAllowed and
@@ -15183,7 +15164,7 @@ begin
       mniViewEdit.Visible := Assigned(Element) and Element.IsEditable;
       mniViewSetToDefault.Visible := not wbTranslationMode and Assigned(Element) and Element._File.IsEditable and
         (Supports(Element.ValueDef, IwbStructDef, StructDef) and (StructDef.OptionalFromElement <> -1));
-      mniViewRemove.Visible := not wbTranslationMode and Assigned(Element) and Element.IsRemoveable;
+      mniViewRemove.Visible := not wbTranslationMode and Assigned(Element) and Element.IsRemovable;
       mniViewClear.Visible := not wbTranslationMode and Assigned(Element) and Element.IsClearable;
       mniViewMoveUp.Enabled := not wbTranslationMode and Assigned(Element) and Element.CanMoveUp;
       mniViewMoveDown.Enabled := not wbTranslationMode and Assigned(Element) and Element.CanMoveDown;
@@ -15309,11 +15290,8 @@ end;
 
 procedure TfrmMain.ReInitTree(aNoGameMaster: Boolean; aFiles: TwbFiles);
 var
-  i, j                        : Integer;
+  i                           : Integer;
   _File                       : IwbFile;
-  SelectFrm                   : TfrmFileSelect;
-  SelectedNodes               : TNodeArray;
-  NodeData                    : PNavNodeData;
 begin
   if xeQuickClean then begin
     aFiles := nil;
@@ -15344,7 +15322,7 @@ begin
   end;
 end;
 
-function TfrmMain.RemoveableSelection(ContainsChilds: PBoolean): TNodeArray;
+function TfrmMain.RemovableSelection(ContainsChilds: PBoolean): TNodeArray;
 var
   NodeData                    : PNavNodeData;
   Element                     : IwbElement;
@@ -15368,7 +15346,7 @@ begin
     Element := NodeData.Element;
     if not Assigned(Element) then
       Continue;
-    if not Element.IsRemoveable then
+    if not Element.IsRemovable then
       Continue;
 
     if Assigned(ContainsChilds) then
@@ -15583,11 +15561,13 @@ const
     (rmNo, rmSetInternal);
 begin
   Result := srNothingToDo;
-  FoundSomething := False;
-  BackupWarningGiven := False;
 
   if wbDontSave then
     Exit;
+
+  FoundSomething := False;
+  BackupWarningGiven := False;
+  SavedAny := False;
 
   pgMain.ActivePage := tbsMessages;
 
@@ -15646,7 +15626,6 @@ begin
           if CheckListBox1.Checked[i] then begin
             FoundSomething := True;
             TryDirectRename := False;
-            NeedsRename := False;
             SavedThisOne := False;
 
             // localization file
@@ -17770,9 +17749,9 @@ begin
 end;
 
 type
-  {WARNING: This is correct for Delphi 10.2 Tokyo. Might need to be adjusted for other Delphi versions.}
+  {WARNING: This is correct for Delphi 10.2 Tokyo. Might need to be adjusted for other Delphi versions. Still valid like this up to Delphi 12}
   TStringListPrivateHacker = class(TStrings)
-  private
+  protected
     FList: TStringItemList;
     FCount: Integer;
     FCapacity: Integer;
@@ -17792,7 +17771,7 @@ var
   {$ENDIF}
 begin
   if EditInfoCacheLGeneration <> wbLocalizationHandler.Generation then begin
-    EditInfoCacheID := 0;
+    EditInfoCacheID := nil;
     EditInfoCache := nil;
     EditInfoCacheLGeneration := wbLocalizationHandler.Generation;
   end;
@@ -17882,7 +17861,6 @@ var
   ViewFocusedElement              : IwbElement;
   Element                     : IwbElement;
   Def                         : IwbNamedDef;
-  SubRecordDef                : IwbSubRecordDef;
 begin
   UserWasActive := True;
 
@@ -18007,6 +17985,9 @@ begin
   Dec(Column);
   if InRange(Column, Low(ActiveRecords), High(ActiveRecords)) then begin
     if FindColors(Text, Colors) then begin
+      if wbDontDrawColorText then
+        DefaultDraw := False;
+
       var OldBrushColor := TargetCanvas.Brush.Color;
       try
         var r := CellRect;
@@ -18264,7 +18245,6 @@ procedure TfrmMain.vstViewGetText(Sender: TBaseVirtualTree;
   var CellText: string);
 var
   NodeDatas    : PViewNodeDatas;
-  NodeData     : PViewNodeData;
   Element      : IwbElement;
   ElementCount : Integer;
   i,j          : Integer;
@@ -18504,7 +18484,6 @@ procedure TfrmMain.vstViewInitNode(Sender: TBaseVirtualTree; ParentNode,
 var
   NodeDatas                   : PViewNodeDatas;
   ParentDatas                 : PViewNodeDatas;
-  Parent                      : PVirtualNode;
 begin
   NodeDatas := Sender.GetNodeData(Node);
   ParentDatas := Sender.GetNodeData(ParentNode);
@@ -19221,7 +19200,6 @@ var
   GroupRecord  : IwbGroupRecord;
   Chapter      : IwbChapter;
   _File        : IwbFile;
-  FormID       : TwbFormID;
   s            : string;
 begin
   CellText := '';
@@ -19388,7 +19366,6 @@ procedure TfrmMain.vstNavInitChildren(Sender: TBaseVirtualTree; Node: PVirtualNo
 var
   Container                   : IwbContainerElementRef;
   NodeData                    : PNavNodeData;
-  NodesToRemove               : Int64;
   ChildNode                   : PVirtualNode;
   ChildNodeData               : PNavNodeData;
   i, j                        : Integer;
@@ -19399,8 +19376,6 @@ begin
     Inc(vstNavInitChildrenGeneration);
     ChildCount := Container.ElementCount;
     NodeData.MissingElements := nil;
-
-    NodesToRemove := Int64(Node.ChildCount) - Int64(ChildCount);
 
     ChildNode := Node.FirstChild;
     if Assigned(ChildNode) then begin

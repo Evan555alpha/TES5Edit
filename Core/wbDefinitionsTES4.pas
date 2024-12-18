@@ -19,19 +19,14 @@ var
   wbPKDTFlags: IwbFlagsDef;
   wbServiceFlags: IwbFlagsDef;
 
-  wbBlendModeEnum: IwbEnumDef;
-  wbBlendOpEnum: IwbEnumDef;
   wbCrimeTypeEnum: IwbEnumDef;
   wbFormTypeEnum: IwbEnumDef;
-  wbFunctionsEnum: IwbEnumDef;
   wbMagicSchoolEnum: IwbEnumDef;
-  wbMusicEnum: IwbEnumDef;
   wbOBMEResolutionInfo: IwbEnumDef;
   wbPKDTType: IwbEnumDef;
   wbSkillEnum: IwbEnumDef;
   wbSoulGemEnum: IwbEnumDef;
   wbSpecializationEnum: IwbEnumDef;
-  wbZTestFuncEnum: IwbEnumDef;
 
 procedure DefineTES4;
 
@@ -46,242 +41,6 @@ uses
   wbHelpers,
   wbDefinitionsCommon,
   wbDefinitionsSignatures;
-
-const
-  ACBS : TwbSignature = 'ACBS';
-  ACHR : TwbSignature = 'ACHR';
-  ACRE : TwbSignature = 'ACRE';
-  TRGT : TwbSignature = 'TRGT';
-  ACTI : TwbSignature = 'ACTI';
-  AIDT : TwbSignature = 'AIDT';
-  ALCH : TwbSignature = 'ALCH';
-  AMMO : TwbSignature = 'AMMO';
-  ANAM : TwbSignature = 'ANAM';
-  ANIO : TwbSignature = 'ANIO';
-  APPA : TwbSignature = 'APPA';
-  ARMO : TwbSignature = 'ARMO';
-  ATTR : TwbSignature = 'ATTR';
-  ATXT : TwbSignature = 'ATXT';
-  BMDT : TwbSignature = 'BMDT';
-  BNAM : TwbSignature = 'BNAM';
-  BOOK : TwbSignature = 'BOOK';
-  BSGN : TwbSignature = 'BSGN';
-  BTXT : TwbSignature = 'BTXT';
-  CELL : TwbSignature = 'CELL';
-  CLAS : TwbSignature = 'CLAS';
-  CLMT : TwbSignature = 'CLMT';
-  CLOT : TwbSignature = 'CLOT';
-  CNAM : TwbSignature = 'CNAM';
-  CNTO : TwbSignature = 'CNTO';
-  CONT : TwbSignature = 'CONT';
-  CREA : TwbSignature = 'CREA';
-  CSAD : TwbSignature = 'CSAD';
-  CSCR : TwbSignature = 'CSCR';
-  CSDC : TwbSignature = 'CSDC';
-  CSDI : TwbSignature = 'CSDI';
-  CSDT : TwbSignature = 'CSDT';
-  CSTD : TwbSignature = 'CSTD';
-  CSTY : TwbSignature = 'CSTY';
-  CTDA : TwbSignature = 'CTDA';
-  CTDT : TwbSignature = 'CTDT';
-  DATA : TwbSignature = 'DATA';
-  DATX : TwbSignature = 'DATX';
-  DELE : TwbSignature = 'DELE';
-  DESC : TwbSignature = 'DESC';
-  DIAL : TwbSignature = 'DIAL';
-  DNAM : TwbSignature = 'DNAM';
-  DOOR : TwbSignature = 'DOOR';
-  EDID : TwbSignature = 'EDID';
-  EDDX : TwbSignature = 'EDDX';
-  EFID : TwbSignature = 'EFID';
-  EFIT : TwbSignature = 'EFIT';
-  ACVA : TwbSignature = 'ACVA';
-  EFII : TwbSignature = 'EFII';
-  EFXX : TwbSignature = 'EFXX';
-  EFIX : TwbSignature = 'EFIX';
-  EFME : TwbSignature = 'EFME';
-  EFSH : TwbSignature = 'EFSH';
-  ENAM : TwbSignature = 'ENAM';
-  ENCH : TwbSignature = 'ENCH';
-  ENIT : TwbSignature = 'ENIT';
-  ESCE : TwbSignature = 'ESCE';
-  EYES : TwbSignature = 'EYES';
-  FACT : TwbSignature = 'FACT';
-  FGGA : TwbSignature = 'FGGA';
-  FGGS : TwbSignature = 'FGGS';
-  FGTS : TwbSignature = 'FGTS';
-  FLOR : TwbSignature = 'FLOR';
-  FLTV : TwbSignature = 'FLTV';
-  FNAM : TwbSignature = 'FNAM';
-  FULL : TwbSignature = 'FULL';
-  FURN : TwbSignature = 'FURN';
-  GLOB : TwbSignature = 'GLOB';
-  GMST : TwbSignature = 'GMST';
-  GNAM : TwbSignature = 'GNAM';
-  GRAS : TwbSignature = 'GRAS';
-  HAIR : TwbSignature = 'HAIR';
-  HCLR : TwbSignature = 'HCLR';
-  HEDR : TwbSignature = 'HEDR';
-  HNAM : TwbSignature = 'HNAM';
-  ICO2 : TwbSignature = 'ICO2';
-  ICON : TwbSignature = 'ICON';
-  IDLE : TwbSignature = 'IDLE';
-  NULL : TwbSignature = 'NULL';
-  INAM : TwbSignature = 'INAM';
-  INDX : TwbSignature = 'INDX';
-  INFO : TwbSignature = 'INFO';
-  INGR : TwbSignature = 'INGR';
-  JNAM : TwbSignature = 'JNAM';
-  KEYM : TwbSignature = 'KEYM';
-  KFFZ : TwbSignature = 'KFFZ';
-  LAND : TwbSignature = 'LAND';
-  LIGH : TwbSignature = 'LIGH';
-  LNAM : TwbSignature = 'LNAM';
-  LSCR : TwbSignature = 'LSCR';
-  LTEX : TwbSignature = 'LTEX';
-  LVLC : TwbSignature = 'LVLC';
-  LVLD : TwbSignature = 'LVLD';
-  LVLF : TwbSignature = 'LVLF';
-  LVLI : TwbSignature = 'LVLI';
-  LVLO : TwbSignature = 'LVLO';
-  LVSP : TwbSignature = 'LVSP';
-  MAST : TwbSignature = 'MAST';
-  MGEF : TwbSignature = 'MGEF';
-  MISC : TwbSignature = 'MISC';
-  MNAM : TwbSignature = 'MNAM';
-  MO2B : TwbSignature = 'MO2B';
-  MO2T : TwbSignature = 'MO2T';
-  MO3B : TwbSignature = 'MO3B';
-  MO3T : TwbSignature = 'MO3T';
-  MO4B : TwbSignature = 'MO4B';
-  MO4T : TwbSignature = 'MO4T';
-  MOD2 : TwbSignature = 'MOD2';
-  MOD3 : TwbSignature = 'MOD3';
-  MOD4 : TwbSignature = 'MOD4';
-  MODB : TwbSignature = 'MODB';
-  MODL : TwbSignature = 'MODL';
-  NAM0 : TwbSignature = 'NAM0';
-  NAM1 : TwbSignature = 'NAM1';
-  NAM2 : TwbSignature = 'NAM2';
-  NAM9 : TwbSignature = 'NAM9';
-  NAME : TwbSignature = 'NAME';
-  NIFT : TwbSignature = 'NIFT';
-  NIFZ : TwbSignature = 'NIFZ';
-  NPC_ : TwbSignature = 'NPC_';
-  OBME : TwbSignature = 'OBME';
-  ONAM : TwbSignature = 'ONAM';
-  PACK : TwbSignature = 'PACK';
-  PFIG : TwbSignature = 'PFIG';
-  PFPC : TwbSignature = 'PFPC';
-  PGAG : TwbSignature = 'PGAG';
-  PGRD : TwbSignature = 'PGRD';
-  PGRI : TwbSignature = 'PGRI';
-  PGRL : TwbSignature = 'PGRL';
-  PGRP : TwbSignature = 'PGRP';
-  PGRR : TwbSignature = 'PGRR';
-  PKDT : TwbSignature = 'PKDT';
-  PKID : TwbSignature = 'PKID';
-  PLDT : TwbSignature = 'PLDT';
-  PNAM : TwbSignature = 'PNAM';
-  PSDT : TwbSignature = 'PSDT';
-  PTDT : TwbSignature = 'PTDT';
-  QNAM : TwbSignature = 'QNAM';
-  QSDT : TwbSignature = 'QSDT';
-  QSTA : TwbSignature = 'QSTA';
-  QSTI : TwbSignature = 'QSTI';
-  QSTR : TwbSignature = 'QSTR';
-  TPIC : TwbSignature = 'TPIC';
-  QUST : TwbSignature = 'QUST';
-  RACE : TwbSignature = 'RACE';
-  RCLR : TwbSignature = 'RCLR';
-  RDAT : TwbSignature = 'RDAT';
-  RDGS : TwbSignature = 'RDGS';
-  RDMD : TwbSignature = 'RDMD';
-  RDMP : TwbSignature = 'RDMP';
-  RDOT : TwbSignature = 'RDOT';
-  RDSD : TwbSignature = 'RDSD';
-  RDWT : TwbSignature = 'RDWT';
-  REFR : TwbSignature = 'REFR';
-  PLYR : TwbSignature = 'PLYR';
-  REGN : TwbSignature = 'REGN';
-  RNAM : TwbSignature = 'RNAM';
-  ROAD : TwbSignature = 'ROAD';
-  RPLD : TwbSignature = 'RPLD';
-  RPLI : TwbSignature = 'RPLI';
-  SBSP : TwbSignature = 'SBSP';
-  SCHD : TwbSignature = 'SCHD';
-  SCHR : TwbSignature = 'SCHR';
-  SCIT : TwbSignature = 'SCIT';
-  SCPT : TwbSignature = 'SCPT';
-  SCRI : TwbSignature = 'SCRI';
-  SCRO : TwbSignature = 'SCRO';
-  SCRV : TwbSignature = 'SCRV';
-  SCVR : TwbSignature = 'SCVR';
-  SGST : TwbSignature = 'SGST';
-  SKIL : TwbSignature = 'SKIL';
-  SLCP : TwbSignature = 'SLCP';
-  SLGM : TwbSignature = 'SLGM';
-  SLSD : TwbSignature = 'SLSD';
-  SNAM : TwbSignature = 'SNAM';
-  SNDD : TwbSignature = 'SNDD';
-  SNDX : TwbSignature = 'SNDX';
-  SOUL : TwbSignature = 'SOUL';
-  SOUN : TwbSignature = 'SOUN';
-  SPEL : TwbSignature = 'SPEL';
-  SPIT : TwbSignature = 'SPIT';
-  SPLO : TwbSignature = 'SPLO';
-  STAT : TwbSignature = 'STAT';
-  TCLF : TwbSignature = 'TCLF';
-  TCLT : TwbSignature = 'TCLT';
-  TES4 : TwbSignature = 'TES4';
-  TNAM : TwbSignature = 'TNAM';
-  TRDT : TwbSignature = 'TRDT';
-  TREE : TwbSignature = 'TREE';
-  UNAM : TwbSignature = 'UNAM';
-  VCLR : TwbSignature = 'VCLR';
-  VHGT : TwbSignature = 'VHGT';
-  VNAM : TwbSignature = 'VNAM';
-  VNML : TwbSignature = 'VNML';
-  VTEX : TwbSignature = 'VTEX';
-  VTXT : TwbSignature = 'VTXT';
-  WATR : TwbSignature = 'WATR';
-  WEAP : TwbSignature = 'WEAP';
-  WLST : TwbSignature = 'WLST';
-  WNAM : TwbSignature = 'WNAM';
-  WRLD : TwbSignature = 'WRLD';
-  WTHR : TwbSignature = 'WTHR';
-  XACT : TwbSignature = 'XACT';
-  XCCM : TwbSignature = 'XCCM';
-  XCHG : TwbSignature = 'XCHG';
-  XCLC : TwbSignature = 'XCLC';
-  XCLL : TwbSignature = 'XCLL';
-  XCLR : TwbSignature = 'XCLR';
-  XCLW : TwbSignature = 'XCLW';
-  XCMT : TwbSignature = 'XCMT';
-  XCNT : TwbSignature = 'XCNT';
-  XCWT : TwbSignature = 'XCWT';
-  XESP : TwbSignature = 'XESP';
-  XGLB : TwbSignature = 'XGLB';
-  XHLT : TwbSignature = 'XHLT';
-  XHRS : TwbSignature = 'XHRS';
-  XLCM : TwbSignature = 'XLCM';
-  XLOC : TwbSignature = 'XLOC';
-  XLOD : TwbSignature = 'XLOD';
-  XMRC : TwbSignature = 'XMRC';
-  XMRK : TwbSignature = 'XMRK';
-  XNAM : TwbSignature = 'XNAM';
-  XOWN : TwbSignature = 'XOWN';
-  XPCI : TwbSignature = 'XPCI';
-  XRGD : TwbSignature = 'XRGD';
-  XRNK : TwbSignature = 'XRNK';
-  XRTM : TwbSignature = 'XRTM';
-  XSCL : TwbSignature = 'XSCL';
-  XSED : TwbSignature = 'XSED';
-  XSOL : TwbSignature = 'XSOL';
-  XTEL : TwbSignature = 'XTEL';
-  XTRG : TwbSignature = 'XTRG';
-  XXXX : TwbSignature = 'XXXX';
-  ZNAM : TwbSignature = 'ZNAM';
 
 var
   wbEDID: IwbSubRecordDef;
@@ -457,35 +216,6 @@ begin
         0..6: Result := '';
       else
         Result := '<Unknown: '+IntToStr(aInt and not $80)+'>';
-      end;
-    end;
-  end;
-end;
-
-function wbWthrDataClassification(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
-begin
-  Result := '';
-  case aType of
-    ctToStr, ctToSummary: begin
-      case aInt and not 192 of
-        0: Result := 'None';
-        1: Result := 'Pleasant';
-        2: Result := 'Cloudy';
-        3: Result := 'Unknown 3';
-        4: Result := 'Rainy';
-        8: Result := 'Snow';
-      else
-        Result := '<Unknown: '+IntToStr(aInt and not 192)+'>';
-      end;
-    end;
-    ctToSortKey: begin
-      Result := IntToHex64(aInt, 2)
-    end;
-    ctCheck: begin
-      case aInt and not 192 of
-        0..4, 8: Result := '';
-      else
-        Result := '<Unknown: '+IntToStr(aInt and not 192)+'>';
       end;
     end;
   end;
@@ -1335,21 +1065,6 @@ begin
   end;
 end;
 
-procedure wbRemoveOFST(const aElement: IwbElement);
-var
-  Container: IwbContainer;
-  rOFST: IwbRecord;
-begin
-  if not wbRemoveOffsetData then
-    Exit;
-
-  if Supports(aElement, IwbContainer, Container) then begin
-    rOFST := Container.RecordBySignature[OFST];
-    if Assigned(rOFST) then
-      Container.RemoveElement(rOFST);
-  end;
-end;
-
 procedure wbCELLAfterLoad(const aElement: IwbElement);
 var
   Container    : IwbContainerElementRef;
@@ -1436,16 +1151,6 @@ begin
   finally
     wbEndInternalEdit;
   end;
-end;
-
-procedure wbCounterEffectsAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-begin
-  wbCounterByPathAfterSet('DATA - Data\Counter effect count', aElement);
-end;
-
-procedure wbMGEFAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-begin
-  wbCounterContainerByPathAfterSet('DATA - Data\Counter effect count', 'ESCE - Counter Effects', aElement);
 end;
 
 procedure wbEFITAfterLoad(const aElement: IwbElement);
@@ -1814,28 +1519,8 @@ var
   wbLeveledListEntrySpell: IwbRecordMemberDef;
 begin
   DefineCommon;
-  wbRecordFlags := wbInteger('Record Flags', itU32, wbFlags([
-    {0x00000001}'ESM',
-    {0x00000002}'',
-    {0x00000004}'',
-    {0x00000008}'',
-    {0x00000010}'',
-    {0x00000020}'Deleted',
-    {0x00000040}'Border Region / Actor Value',
-    {0x00000080}'Turn Off Fire / Actor Value',
-    {0x00000100}'',
-    {0x00000200}'Casts shadows',
-    {0x00000400}'Quest item / Persistent reference / Show in Menu',
-    {0x00000800}'Initially disabled',
-    {0x00001000}'Ignored',
-    {0x00002000}'',
-    {0x00004000}'',
-    {0x00008000}'Visible when distant',
-    {0x00010000}'',
-    {0x00020000}'Dangerous / Off limits (Interior cell)',
-    {0x00040000}'Compressed',
-    {0x00080000}'Can''t wait'
-  ]));
+
+  wbRecordFlags := wbInteger('Record Flags', itU32, wbFlags(wbFlagsList([])));
 
   wbMainRecordHeader := wbStruct('Record Header', [
     wbString('Signature', 4, cpCritical),
@@ -1843,19 +1528,17 @@ begin
     wbRecordFlags,
     wbFormID('FormID', cpFormID).IncludeFlag(dfSummarySelfAsShortName),
     wbByteArray('Version Control Info', 4, cpIgnore).SetToStr(wbVCI1ToStrBeforeFO4)
-  ])
-  .SetSummaryKey([3, 2])
-  .SetSummaryMemberPrefixSuffix(2, '{', '}')
-  .IncludeFlag(dfSummaryMembersNoName)
-  .IncludeFlag(dfCollapsed, wbCollapseRecordHeader);
+  ]).SetSummaryKey([3, 2])
+    .SetSummaryMemberPrefixSuffix(2, '{', '}')
+    .IncludeFlag(dfSummaryMembersNoName)
+    .IncludeFlag(dfCollapsed, wbCollapseRecordHeader);
 
   wbSizeOfMainRecordStruct := 20;
 
   wbIgnoreRecords.Add(XXXX);
 
-  wbXRGD := wbByteArray(XRGD, 'Ragdoll Data');
 
-  wbMusicEnum := wbEnum(['Default', 'Public', 'Dungeon']);
+  wbXRGD := wbByteArray(XRGD, 'Ragdoll Data');
 
   wbEDID := wbString(EDID, 'Editor ID', 0, cpNormal); // not cpBenign according to Arthmoor
   wbFULL := wbStringKC(FULL, 'Name', 0, cpTranslate);
@@ -1874,7 +1557,12 @@ begin
     wbByteArray('Unused', 3)
   ]);
 
-  wbRefRecord(ACHR, 'Placed NPC', [
+  wbRefRecord(ACHR, 'Placed NPC',
+    wbFlags(wbFlagsList([
+      10, 'Persistent',
+      11, 'Initially Disabled',
+      15, 'Visible When Distant'
+    ])), [
     wbEDID,
     wbFormIDCk(NAME, 'Base', [NPC_], False, cpNormal, True),
     wbRStruct('Unused', [
@@ -1895,7 +1583,12 @@ begin
   // TES4 only
   wbXGLB := wbFormIDCk(XGLB, 'Global variable', [GLOB]);
 
-  wbRefRecord(ACRE, 'Placed Creature', [
+  wbRefRecord(ACRE, 'Placed Creature',
+    wbFlags(wbFlagsList([
+      10, 'Persistent',
+      11, 'Initially Disabled',
+      15, 'Visible When Distant'
+    ])), [
     wbEDID,
     wbFormIDCk(NAME, 'Base', [CREA], False, cpNormal, True),
     wbOwnership(wbXOWN, [], wbXGLB),
@@ -1906,7 +1599,11 @@ begin
     wbDATAPosRot
   ], True, wbPlacedAddInfo);
 
-  wbRecord(ACTI, 'Activator', [
+  wbRecord(ACTI, 'Activator',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item',
+      17, 'Dangerous'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2169,7 +1866,10 @@ begin
 //      ], [])
 //    ], []);
 
-  wbRecord(ALCH, 'Potion', [
+  wbRecord(ALCH, 'Potion',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbStruct(OBME, 'Oblivion Magic Extender', [
       wbInteger('Record Version', itU8),
@@ -2189,7 +1889,10 @@ begin
     wbEffects
   ]);
 
-  wbRecord(AMMO, 'Ammunition', [
+  wbRecord(AMMO, 'Ammunition',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2226,7 +1929,10 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(ARMO, 'Armor', [
+  wbRecord(ARMO, 'Armor',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbSCRI,
@@ -2277,7 +1983,10 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(BOOK, 'Book', [
+  wbRecord(BOOK, 'Book',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2305,16 +2014,21 @@ begin
     wbSPLOs
   ]);
 
-  wbRecord(CELL, 'Cell', [
+  wbRecord(CELL, 'Cell',
+    wbFlags(wbFlagsList([
+      10, 'Persistent',
+      17, 'Off Limits',
+      19, 'Can''t Wait'
+    ])), [
     wbEDID,
     wbFULL,
     wbInteger(DATA, 'Flags', itU8, wbFlags([
       {0x01} 'Is Interior Cell',
       {0x02} 'Has water',
-      {0x04} 'Invert Fast Travel behavior',
+      {0x04} 'Can''t Travel From Here',
       {0x08} 'Force hide land (exterior cell) / Oblivion interior (interior cell)',
       {0x10} '',
-      {0x20} 'Public place',
+      {0x20} 'Public Area',
       {0x40} 'Hand changed',
       {0x80} 'Behave like exterior'
     ]), cpNormal, True),
@@ -2394,7 +2108,10 @@ begin
     wbClimateTiming(wbClmtTime, wbClmtMoonsPhaseLength)
   ]);
 
-  wbRecord(CLOT, 'Clothing', [
+  wbRecord(CLOT, 'Clothing',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbSCRI,
@@ -2451,7 +2168,10 @@ begin
 
   wbCNTOs := wbRArrayS('Items', wbCNTO);
 
-  wbRecord(CONT, 'Container', [
+  wbRecord(CONT, 'Container',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2505,7 +2225,11 @@ var  wbSoundTypeSoundsOld :=
     {5} 'Grand'
   ]);
 
-  wbRecord(CREA, 'Creature', [
+  wbRecord(CREA, 'Creature',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item',
+      19, 'Unknown 19'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2697,7 +2421,10 @@ var  wbSoundTypeSoundsOld :=
     wbINOA
   ], True);
 
-  wbRecord(DOOR, 'Door', [
+  wbRecord(DOOR, 'Door',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2712,41 +2439,6 @@ var  wbSoundTypeSoundsOld :=
       {0x08} 'Minimal use'
     ]), cpNormal, True),
     wbRArrayS('Random teleport destinations', wbFormIDCk(TNAM, 'Destination', [CELL, WRLD]))
-  ]);
-
-  wbBlendModeEnum := wbEnum([
-    '',
-    'Zero',
-    'One',
-    'Source Color',
-    'Source Inverse Color',
-    'Source Alpha',
-    'Source Inverted Alpha',
-    'Dest Alpha',
-    'Dest Inverted Alpha',
-    'Dest Color',
-    'Dest Inverse Color',
-    'Source Alpha SAT'
-  ]);
-
-  wbBlendOpEnum := wbEnum([
-    '',
-    'Add',
-    'Subtract',
-    'Reverse Subtract',
-    'Minimum',
-    'Maximum'
-  ]);
-  wbZTestFuncEnum := wbEnum([
-    '',
-    '',
-    '',
-    'Equal To',
-    'Normal',
-    'Greater Than',
-    '',
-    'Greater Than or Equal Than',
-    'Always Show'
   ]);
 
   wbRecord(EFSH, 'Effect Shader', [
@@ -2877,7 +2569,10 @@ var  wbSoundTypeSoundsOld :=
     wbSeasons
   ]);
 
-  wbRecord(FURN, 'Furniture', [
+  wbRecord(FURN, 'Furniture',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -2912,9 +2607,9 @@ var  wbSoundTypeSoundsOld :=
       wbInteger('Density', itU8),
       wbInteger('Min Slope', itU8),
       wbInteger('Max Slope', itU8),
-      wbByteArray('Unused', 1),
+      wbUnused(1),
       wbInteger('Unit from water amount', itU16),
-      wbByteArray('Unused', 2),
+      wbUnused(2),
       wbInteger('Unit from water type', itU32, wbEnum([
         'Above - At Least',
         'Above - At Most',
@@ -2934,7 +2629,7 @@ var  wbSoundTypeSoundsOld :=
         'Uniform Scaling',
         'Fit to Slope'
       ])),
-      wbByteArray('Unused', 3)
+      wbUnused(3)
     ], cpNormal, True)
   ]).SetSummaryKey([1]);
 
@@ -3311,7 +3006,10 @@ var  wbSoundTypeSoundsOld :=
     wbResultScript
   ]);
 
-  wbRecord(INGR, 'Ingredient', [
+  wbRecord(INGR, 'Ingredient',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbStruct(OBME, 'Oblivion Magic Extender', [
       wbInteger('Record Version', itU8),
@@ -3331,7 +3029,10 @@ var  wbSoundTypeSoundsOld :=
     wbEffects
   ]);
 
-  wbRecord(KEYM, 'Key', [
+  wbRecord(KEYM, 'Key',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -3343,55 +3044,36 @@ var  wbSoundTypeSoundsOld :=
     ], cpNormal, True)
   ]);
 
-  if wbSimpleRecords then begin
+  wbRecord(LAND, 'Landscape',
+    wbFlags(wbFlagsList([
+      18, 'Compressed'
+    ])), [
+    wbInteger(DATA, 'Flags', itU32, wbFlags([
+      {0x001} 'Has Vertex Normals/Height Map',
+      {0x002} 'Has Vertex Colours',
+      {0x004} 'Has Layers',
+      {0x008} 'Unknown 4',
+      {0x010} 'Auto-Calc Normals',
+      {0x020} '',
+      {0x040} '',
+      {0x080} '',
+      {0x100} '',
+      {0x200} '',
+      {0x400} 'Ignored'
+    ])),
+    wbLandNormals,
+    wbLandHeights,
+    wbLandColors,
+    wbLandLayers,
+    wbArray(VTEX, 'Landscape Textures',
+      wbFormIDCk('Texture', [LTEX, NULL]))
+  ]);
 
-    wbRecord(LAND, 'Landscape', [
-      wbInteger(DATA, 'Flags', itU32, wbFlags([
-        {0x00000001} 'Has Vertex Normals/Height Map',
-        {0x00000002} 'Has Vertex Colours',
-        {0x00000004} 'Has Layers',
-        {0x00000008} 'Unknown 4',
-        {0x00000010} 'Unknown 5',
-        {0x00000020} '',
-        {0x00000040} '',
-        {0x00000080} '',
-        {0x00000100} '',
-        {0x00000200} '',
-        {0x00000400} 'Unknown 11'
-      ])),
-      wbByteArray(VNML, 'Vertex Normals'),
-      wbByteArray(VHGT, 'Vertex Height Map'),
-      wbByteArray(VCLR, 'Vertex Colours'),
-      wbLandscapeLayers(wbSimpleRecords),
-      wbArray(VTEX, 'Textures', wbFormIDCk('Texture', [LTEX, NULL]))
-    ]);
 
-  end else begin
-
-    wbRecord(LAND, 'Landscape', [
-      wbInteger(DATA, 'Flags', itU32, wbFlags([
-        'Has Vertex Normals/Height Map',
-        'Has Vertex Colours',
-        'Has Layers',
-        'Unknown 4',
-        'Unknown 5',
-        '',
-        '',
-        '',
-        '',
-        '',
-        'Unknown 11'
-      ])),
-      wbVertexColumns(VNML, 'Vertex Normals'),
-      wbVertexHeightMap,
-      wbVertexColumns(VCLR, 'Vertex Colours'),
-      wbLandscapeLayers(wbSimpleRecords),
-      wbArray(VTEX, 'Textures', wbFormIDCk('Texture', [LTEX, NULL]))
-    ]);
-
-  end;
-
-  wbRecord(LIGH, 'Light', [
+  wbRecord(LIGH, 'Light',
+    wbFlags(wbFlagsList([
+      10, 'Quest'
+    ])), [
     wbEDID,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
     wbSCRI,
@@ -3657,12 +3339,16 @@ var  wbSoundTypeSoundsOld :=
       wbFloat('Constant Effect enchantment factor'),
       wbFloat('Constant Effect barter factor')
     ], cpNormal, True, nil, 10),
-    wbArrayS(ESCE, 'Counter Effects', wbStringMgefCode('Counter Effect Code', 4),
-      0, cpNormal, False, nil, wbCounterEffectsAfterSet)
-  ], False, nil, cpNormal, False, wbMGEFAfterLoad, wbMGEFAfterSet)
+    wbArrayS(ESCE, 'Counter Effects',
+      wbStringMgefCode('Counter Effect Code', 4)
+    ).SetCountPathOnValue('DATA\Counter Effect Count', False)
+  ], False, nil, cpNormal, False, wbMGEFAfterLoad)
   .IncludeFlag(dfIndexEditorID);;
 
-  wbRecord(MISC, 'Misc. Item', [
+  wbRecord(MISC, 'Misc. Item',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -3695,7 +3381,12 @@ var  wbSoundTypeSoundsOld :=
     wbByteArray(FGTS, 'FaceGen Texture-Symmetric', 0, cpNormal, True)
   ], [], cpNormal, True);
 
-  wbRecord(NPC_, 'Non-Player Character', [
+  wbRecord(NPC_, 'Non-Player Character',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item',
+      18, 'Compressed',
+      19, 'Unknown 19'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -3841,7 +3532,11 @@ var  wbSoundTypeSoundsOld :=
           {11} 'Cast magic', 'Cast'
         ]);
 
-  wbRecord(PACK, 'AI Package', [
+  wbRecord(PACK, 'AI Package',
+    wbFlags(wbFlagsList([
+      14, 'Unknown 14',
+      15, 'Unknown 15'
+    ])), [
     wbEDID,
     wbUnion(PKDT, 'General', wbPACKPKDTDecider, [
       wbStruct('', [
@@ -3936,7 +3631,10 @@ var  wbSoundTypeSoundsOld :=
        the next 4 of point 3 and so on..., this can currently not be represented
        declaratively }
 
-  wbRecord(PGRD, 'Path Grid', [
+  wbRecord(PGRD, 'Path Grid',
+    wbFlags(wbFlagsList([
+      18, 'Compressed'
+    ])), [
     wbInteger(DATA, 'Point Count', itU16, nil, cpNormal, True),
     wbPGRP,
     wbByteArray(PGAG, 'Unknown'),
@@ -4113,7 +3811,14 @@ var  wbSoundTypeSoundsOld :=
     wbByteArray(SNAM, 'Unknown', 2, cpNormal, True)
   ], True);
 
-  wbRefRecord(REFR, 'Placed Object', [
+  wbRefRecord(REFR, 'Placed Object',
+    wbFlags(wbFlagsList([
+       7, 'Turn Off Fire',
+       9, 'Cast Shadows',
+      10, 'Persistent',
+      11, 'Initially Disabled',
+      15, 'Visible When Distant'
+    ])), [
     wbEDID,
     wbFormIDCk(NAME, 'Base', [TREE, SBSP, LVLC, SOUN, ACTI, DOOR, FLOR, STAT, FURN, CONT, ARMO, AMMO, MISC, WEAP, INGR, SLGM, SGST, BOOK, KEYM, CLOT, ALCH, APPA, LIGH, GRAS], False, cpNormal, True),
     wbStruct(XTEL, 'Teleport Destination', [
@@ -4185,7 +3890,10 @@ var  wbSoundTypeSoundsOld :=
     wbDATAPosRot
   ], True, wbPlacedAddInfo, cpNormal, False, wbREFRAfterLoad);
 
-  wbRecord(REGN, 'Region', [
+  wbRecord(REGN, 'Region',
+    wbFlags(wbFlagsList([
+      6, 'Border Region'
+    ])), [
     wbEDID,
     wbICON,
     wbByteColors(RCLR, 'Map Color').SetRequired(True),
@@ -4360,7 +4068,10 @@ var  wbSoundTypeSoundsOld :=
     wbString(MNAM, 'Master Text', 0, cpTranslate, True)
   ]).SetSummaryKey([2]);
 
-  wbRecord(SLGM, 'Soul Gem', [
+  wbRecord(SLGM, 'Soul Gem',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
@@ -4461,12 +4172,18 @@ var  wbSoundTypeSoundsOld :=
     wbEffects
   ]);
 
-  wbRecord(STAT, 'Static', [
+  wbRecord(STAT, 'Static',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbTexturedModel('Model', [MODL, MODB, MODT])
   ]).SetSummaryKey([1]);
 
-  wbRecord(TES4, 'Main File Header', [
+  wbRecord(TES4, 'Main File Header',
+    wbFlags(wbFlagsList([
+      0, 'ESM'
+    ])), [
     wbHEDR,
     wbByteArray(OFST, 'Unknown', 0, cpIgnore),
     wbByteArray(DELE, 'Unknown', 0, cpIgnore),
@@ -4476,7 +4193,7 @@ var  wbSoundTypeSoundsOld :=
       wbStringForward(MAST, 'FileName', 0, cpNormal, True),
       wbByteArray(DATA, 'Unused', 8, cpIgnore, True)
     ], [])).IncludeFlag(dfInternalEditOnly, not wbAllowMasterFilesEdit)
-  ], False, nil, cpNormal, True, wbRemoveOFST);
+  ], False, nil, cpNormal, True);
 
   wbRecord(PLYR, 'Player Reference', [
     wbEDID,
@@ -4506,58 +4223,72 @@ var  wbSoundTypeSoundsOld :=
 
   wbRecord(WATR, 'Water', [
     wbEDID,
-    wbString(TNAM, 'Texture', 0, cpNormal, True),
-    wbInteger(ANAM, 'Opacity', itU8, nil, cpNormal, True),
-    wbInteger(FNAM, 'Flags', itU8, wbFlags([
-      {0}'Causes Damage',
-      {1}'Reflective'
-    ]), cpNormal, True),
-    wbString(MNAM, 'Material ID'{>>>}, 0, cpNormal, True{<<<}),
+    wbString(TNAM, 'Texture')
+      .SetRequired,
+    wbInteger(ANAM, 'Opacity', itU8)
+      .SetDefaultNativeValue(75)
+      .SetRequired,
+    wbInteger(FNAM, 'Flags', itU8,
+      wbFlags(wbSparseFlags([
+        0, 'Causes Damage',
+        1, 'Reflective'
+     ], False, 2))
+    ).SetRequired,
+    wbString(MNAM, 'Material ID')
+      .SetRequired,
     wbFormIDCk(SNAM, 'Sound', [SOUN]),
     wbStruct(DATA, '', [
-      wbFloat('Wind Velocity'),
-      wbFloat('Wind Direction'),
-      wbFloat('Wave Amplitude'),
-      wbFloat('Wave Frequency'),
-      wbFloat('Sun Power'),
-      wbFloat('Reflectivity Amount'),
-      wbFloat('Fresnel Amount'),
+      wbFloat('Wind Velocity').SetDefaultNativeValue(0.1),
+      wbFloat('Wind Direction').SetDefaultNativeValue(90),
+      wbFloat('Wave Amplitude').SetDefaultNativeValue(0.5),
+      wbFloat('Wave Frequency').SetDefaultNativeValue(1),
+      wbFloat('Sun Power').SetDefaultNativeValue(50),
+      wbFloat('Reflectivity Amount').SetDefaultNativeValue(0.5),
+      wbFloat('Fresnel Amount').SetDefaultNativeValue(0.025),
       wbFloat('Scroll X Speed'),
       wbFloat('Scroll Y Speed'),
-      wbFloat('Fog Distance - Near Plane'),
-      wbFloat('Fog Distance - Far Plane'),
+      wbStruct('Fog Distance', [
+        wbFloat('Near').SetDefaultNativeValue(27852.800782),
+        wbFloat('Far').SetDefaultNativeValue(163840)
+      ]),
       wbByteColors('Shallow Color'),
       wbByteColors('Deep Color'),
       wbByteColors('Reflection Color'),
-      wbInteger('Texture Blend', itU8),
-      wbByteArray('Unused', 3),
-      wbFloat('Rain Simulator - Force'),
-      wbFloat('Rain Simulator - Velocity'),
-      wbFloat('Rain Simulator - Falloff'),
-      wbFloat('Rain Simulator - Dampner'),
-      wbFloat('Rain Simulator - Starting Size'),
-      wbFloat('Displacement Simulator - Force'),
-      wbFloat('Displacement Simulator - Velocity'),
-      wbFloat('Displacement Simulator - Falloff'),
-      wbFloat('Displacement Simulator - Dampner'),
-      wbFloat('Displacement Simulator - Starting Size'),
+      wbInteger('Texture Blend', itU8).SetDefaultNativeValue(50),
+      wbUnused(3),
+      wbStruct('Rain Simulator', [
+        wbFloat('Force').SetDefaultNativeValue(0.1),
+        wbFloat('Velocity').SetDefaultNativeValue(0.6),
+        wbFloat('Falloff').SetDefaultNativeValue(0.985),
+        wbFloat('Dampner').SetDefaultNativeValue(2),
+        wbFloat('Starting Size').SetDefaultNativeValue(0.01)
+      ], cpNormal, True, nil, 0),
+      wbStruct('Displacement Simulator', [
+        wbFloat('Force').SetDefaultNativeValue(0.4),
+        wbFloat('Velocity').SetDefaultNativeValue(0.6),
+        wbFloat('Falloff').SetDefaultNativeValue(0.985),
+        wbFloat('Dampner').SetDefaultNativeValue(10),
+        wbFloat('Starting Size').SetDefaultNativeValue(0.05)
+      ], cpNormal, True, nil, 0),
       wbInteger('Damage', itU16)
     ], cpNormal, True, nil, 0),
     wbStruct(GNAM, 'Related Waters', [
       wbFormIDCk('Daytime', [WATR, NULL]),
       wbFormIDCk('Nighttime', [WATR, NULL]),
       wbFormIDCk('Underwater', [WATR, NULL])
-    ], cpNormal{>>>, True<<<})
+    ]).SetRequired
   ]).SetSummaryKey([1]);
 
-  wbRecord(WEAP, 'Weapon', [
+  wbRecord(WEAP, 'Weapon',
+    wbFlags(wbFlagsList([
+      10, 'Quest Item'
+    ])), [
     wbEDID,
     wbFULL,
     wbTexturedModel('Model', [MODL, MODB, MODT]),
     wbICON,
     wbSCRI,
-    wbENAM,
-    wbInteger(ANAM, 'Enchantment Points', itU16),
+    wbEnchantment,
     wbStruct(DATA, '', [
       wbInteger('Type', itU32, wbEnum([
         {0} 'Blade One Hand',
@@ -4569,111 +4300,23 @@ var  wbSoundTypeSoundsOld :=
       ])),
       wbFloat('Speed'),
       wbFloat('Reach'),
-      wbInteger('Flags', itU32, wbFlags(['Ignores Normal Weapon Resistance'])),
+      wbInteger('Ignores Normal Weapon Resistance', itU32, wbBoolEnum),
       wbInteger('Value', itU32),
       wbInteger('Health', itU32),
       wbFloat('Weight'),
       wbInteger('Damage', itU16)
-    ], cpNormal, True)
+    ]).SetRequired
   ]);
-
-  if wbSimpleRecords then
-    wbRecord(WRLD, 'Worldspace', [
-      wbEDID,
-      wbFULL,
-      wbRStruct('Parent', [
-        wbFormIDCk(WNAM, 'Worldspace', [WRLD])
-      ], []),
-      wbFormIDCk(CNAM, 'Climate', [CLMT]),
-      wbFormIDCk(NAM2, 'Water', [WATR]),
-      wbICON,
-      wbStruct(MNAM, 'Map Data', [
-        wbStruct('Usable Dimensions', [
-          wbInteger('X', itS32),
-          wbInteger('Y', itS32)
-        ]),
-        wbStruct('Cell Coordinates', [
-          wbStruct('NW Cell', [
-            wbInteger('X', itS16),
-            wbInteger('Y', itS16)
-          ]),
-          wbStruct('SE Cell', [
-            wbInteger('X', itS16),
-            wbInteger('Y', itS16)
-          ])
-        ])
-      ]),
-      wbInteger(DATA, 'Flags', itU8, wbFlags([
-        {0x01} 'Small world',
-        {0x02} 'Can''t fast travel',
-        {0x04} 'Oblivion worldspace',
-        {0x08} '',
-        {0x10} 'No LOD water'
-      ]), cpNormal, True),
-      //wbArray(NAM0, 'Unknown', wbFloat(''), 0, nil, nil, cpNormal, True),
-      //wbArray(NAM9, 'Unknown', wbFloat(''), 0, nil, nil, cpNormal, True),
-      wbWorldspaceOBND,
-      wbInteger(SNAM, 'Music', itU32, wbMusicEnum),
-      wbByteArray(OFST, 'Offset Data')
-    ])
-  else
-  wbRecord(WRLD, 'Worldspace', [
-      wbEDID,
-      wbFULL,
-      wbRStruct('Parent', [
-        wbFormIDCk(WNAM, 'Worldspace', [WRLD])
-      ], []),
-      wbFormIDCk(CNAM, 'Climate', [CLMT]),
-      wbFormIDCk(NAM2, 'Water', [WATR]),
-      wbICON,
-      wbStruct(MNAM, 'Map Data', [
-        wbStruct('Usable Dimensions', [
-          wbInteger('X', itS32),
-          wbInteger('Y', itS32)
-        ]),
-        wbStruct('Cell Coordinates', [
-          wbStruct('NW Cell', [
-            wbInteger('X', itS16),
-            wbInteger('Y', itS16)
-          ]),
-          wbStruct('SE Cell', [
-            wbInteger('X', itS16),
-            wbInteger('Y', itS16)
-          ])
-        ])
-      ]),
-      wbInteger(DATA, 'Flags', itU8, wbFlags([
-        {0x01} 'Small world',
-        {0x02} 'Can''t fast travel',
-        {0x04} 'Oblivion worldspace',
-        {0x08} '',
-        {0x10} 'No LOD water'
-      ]), cpNormal, True),
-      //wbArray(NAM0, 'Unknown', wbFloat(''), 0, nil, nil, cpNormal, True),
-      //wbArray(NAM9, 'Unknown', wbFloat(''), 0, nil, nil, cpNormal, True),
-      wbWorldspaceOBND,
-      wbInteger(SNAM, 'Music', itU32, wbMusicEnum),
-      wbOFST
-    ]);
 
   wbRecord(WTHR, 'Weather', [
     wbEDID,
-    wbString(CNAM, 'Texture Lower Layer'),
-    wbString(DNAM, 'Texture Upper Layer'),
-    wbTexturedModel('Model', [MODL, MODB, MODT]),
-    wbArray(NAM0, 'Colors by Types/Times',
-      wbArray('Type',
-        wbByteColors('Time'),
-        ['Sunrise', 'Day', 'Sunset', 'Night']
-      ),
-      ['Sky-Upper','Fog','Clouds-Lower','Ambient','Sunlight','Sun','Stars','Sky-Lower','Horizon','Clouds-Upper']
-    , cpNormal, True),
-    wbStruct(FNAM, 'Fog Distance', [
-      wbFloat('Day Near'),
-      wbFloat('Day Far'),
-      wbFloat('Night Near'),
-      wbFloat('Night Far')
-    ], cpNormal, True),
+    wbString(CNAM, 'Cloud Texture Lower Layer'),
+    wbString(DNAM, 'Cloud Texture Upper Layer'),
+    wbRStruct('Precipitation', [
+      wbTexturedModel('Model', [MODL, MODB, MODT])
+    ], []),
+    wbWeatherColors,
+    wbWeatherFogDistance,
     wbStruct(HNAM, 'HDR Data', [
       wbFloat('Eye Adapt Speed'),
       wbFloat('Blur Radius'),
@@ -4689,8 +4332,8 @@ var  wbSoundTypeSoundsOld :=
       wbFloat('Sunlight Dimmer'),
       wbFloat('Grass Dimmer'),
       wbFloat('Tree Dimmer')
-    ], cpNormal, True),
-    wbStruct(DATA, '', [
+    ]).SetRequired,
+    wbStruct(DATA, 'Data', [
       wbInteger('Wind Speed', itU8),
       wbInteger('Cloud Speed (Lower)', itU8),
       wbInteger('Cloud Speed (Upper)', itU8),
@@ -4702,15 +4345,49 @@ var  wbSoundTypeSoundsOld :=
       wbInteger('Thunder/Lightning - Begin Fade In', itU8),
       wbInteger('Thunder/Lightning - End Fade Out', itU8),
       wbInteger('Thunder/Lightning - Frequency', itU8),
-      wbInteger('Weather Classification', itU8, wbWthrDataClassification),
-      wbStruct('Lightning Color', [
-        wbInteger('Red', itU8),
-        wbInteger('Green', itU8),
-        wbInteger('Blue', itU8)
-      ]).SetToStr(wbRGBAToStr).IncludeFlag(dfCollapsed, wbCollapseRGBA)
-    ], cpNormal, True),
+      wbInteger('Flags ', itU8,
+        wbFlags(wbSparseFlags([
+          0, 'Weather - Pleasant',
+          1, 'Weather - Cloudy',
+          2, 'Weather - Rainy',
+          3, 'Weather - Snow'
+        ], False, 4))
+      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      wbWeatherLightningColor
+    ]).SetRequired,
     wbWeatherSounds
   ]).SetSummaryKey([1,2,3]);
+
+  wbRecord(WRLD, 'Worldspace',
+    wbFlags(wbFlagsList([
+      19, 'Can''t Wait'
+    ])), [
+    wbEDID,
+    wbFULL,
+    wbFormIDCk(WNAM, 'Parent Worldspace', [WRLD]),
+    wbFormIDCk(CNAM, 'Climate', [CLMT])
+      .SetDefaultNativeValue(351)
+      .SetIsRemovable(wbWorldClimateIsRemovable),
+    wbFormIDCk(NAM2, 'Water', [WATR])
+      .SetDefaultNativeValue(24)
+      .SetIsRemovable(wbWorldWaterIsRemovable),
+    wbString(ICON, 'Map Image'),
+    wbWorldMapData,
+    wbInteger(DATA, 'Flags', itU8,
+      wbFlags(wbSparseFlags([
+        0, 'Small world',
+        1, 'Can''t fast travel',
+        2, 'Oblivion worldspace',
+        4, 'No LOD water'
+      ], False, 5), True)
+    ).SetDefaultNativeValue(1)
+     .SetRequired
+     .IncludeFlag(dfCollapsed, wbCollapseFlags),
+    wbWorldObjectBounds,
+    wbInteger(SNAM, 'Music', itU32, wbMusicEnum),
+    wbWorldOffsetData
+  ]).SetAfterLoad(wbWorldAfterLoad)
+    .SetAfterSet(wbWorldAfterSet);
 
   wbAddGroupOrder(GMST);
   wbAddGroupOrder(GLOB);
@@ -4772,7 +4449,6 @@ var  wbSoundTypeSoundsOld :=
   wbNexusModsUrl := 'https://www.nexusmods.com/oblivion/mods/11536';
   if wbToolMode = tmLODgen then
     wbNexusModsUrl := 'https://www.nexusmods.com/oblivion/mods/15781';
-
   wbHEDRVersion := 1.0;
 end;
 
